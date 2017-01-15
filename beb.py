@@ -1,6 +1,5 @@
-# betterEmbedBot 1.0 by @isy#0669
-
-#### -- CONFIG -- ###
+### betterEmbedbot 1.0 by @isy#0669 and @-Kiwi Catnip ♡#1540 ###
+### -- CONFIG -- ###
 
 # Here you can set the invoker.
 # Example: invoker = "."
@@ -24,8 +23,6 @@ password = asdf
 # If you want stuff like "hello {hug}" to be replaced with "hello \(^.^\)", leave this on.
 textargs = True
 #textargs = False
-
-# Don't touch below this line.
 
 import discord
 from discord.ext import commands
