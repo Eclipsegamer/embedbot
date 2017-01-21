@@ -56,28 +56,6 @@ async def on_message(message):
 async def cls(ctx):
     import subprocess as sp
     tmp = sp.call('cls',shell=True)
-@bot.command()
-async def spinny():
-	"""whee"""
-	msg = await bot.say("`|`")
-	await asyncio.sleep(0.5)
-	await bot.edit_message(msg, '`/`')
-	await asyncio.sleep(0.5)
-	await bot.edit_message(msg, '`-`')
-	await asyncio.sleep(0.5)
-	await bot.edit_message(msg, '`\`')
-	await asyncio.sleep(0.5)
-	await bot.edit_message(msg, '`|`')
-	await asyncio.sleep(0.5)
-	await bot.edit_message(msg, '`/`')
-	await asyncio.sleep(0.5)
-	await bot.edit_message(msg, '`-`')
-	await asyncio.sleep(0.5)
-	await bot.edit_message(msg, '`\`')
-	await asyncio.sleep(0.5)
-	await bot.edit_message(msg, '`|`')
-	await asyncio.sleep(1)
-	await bot.edit_message(msg, 'how 2 aboose api')
 	
 @bot.command(pass_context=True)
 async def restart(ctx):
