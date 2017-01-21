@@ -17,13 +17,10 @@ Text triggers!
 
 __Usage__
 
-Open the file with a text editor of your choice.
-First, replace the asdf in these:
+Open up config.json with any text editor.
 
-email = asdf
+Change the email and pass to your email and apss
 
-password = asdf
-
-To your actual email and password.
+Change the invoker if you like
 
 If you like, you can use a token by replacing bot.run(email, password, bot=False) with bot.run("your token", bot=False).
