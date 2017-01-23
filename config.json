@@ -3,5 +3,7 @@
            "password": "asdf",
            "invoker": "*",
            "textargs": "True",
-           "advancedmode": "False"
+           "advancedmode": "False",
+           "autoremoveinvokermessage": "False",
+           "silentmode": "False"
 }
