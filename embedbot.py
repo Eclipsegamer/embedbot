@@ -11,7 +11,13 @@ import traceback
 import json
 import time
 
-sp.call('clear',shell=True)
+current_os = platform.system()
+
+if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
+    tmp = sp.call('clear',shell=True)
+if current_os == "Windows":
+    tmp = sp.call('cls' ,shell=True)
+
 try:
     assert sys.version_info >= (3, 5)
     from discord.ext import commands
@@ -31,7 +37,6 @@ except ImportError:
     clintexists = False
     pass
 uptime = datetime.datetime.now()
-current_os = platform.system()
 
 # Config loading
 
@@ -50,7 +55,10 @@ bot = commands.Bot(command_prefix=invoker, self_bot=True)
 
 @bot.event
 async def on_ready():
-    sp.call('clear',shell=True)
+    if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
+        tmp = sp.call('clear',shell=True)
+    if current_os == "Windows":
+        tmp = sp.call('cls' ,shell=True)
     servers = len(bot.servers)
     channels = len([c for c in bot.get_all_channels()])
     login_time = datetime.datetime.utcnow() - uptime
