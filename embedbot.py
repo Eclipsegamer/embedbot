@@ -1,12 +1,28 @@
-# Embedbot 1.2 made by -Kiwi Catnip ♡#1540 and @isy#0669.
+# Embedbot 1.3 made by -Kiwi Catnip ♡#1540, @isy#0669 and HYP3RD34TH#2104.
 
-import discord
-from discord.ext import commands
+import subprocess as sp
 import asyncio
 import inspect
 import os
+import datetime
+import platform
+import sys
+import traceback
 import json
 import time
+
+sp.call('clear',shell=True)
+try:
+    assert sys.version_info >= (3, 5)
+    from discord.ext import commands
+    import discord
+except ImportError:
+    print("Discord.py is not installed.")
+    sys.exit()
+except AssertionError:
+    print("Embedbot needs Python 3.5 or superior.")
+    sys.exit()
+print('Logging in to Discord...')
 try:
     import clint
     from clint.textui import colored
@@ -14,6 +30,8 @@ try:
 except ImportError:
     clintexists = False
     pass
+uptime = datetime.datetime.now()
+current_os = platform.system()
 
 # Config loading
 
@@ -23,20 +41,50 @@ with open('myconfig.json') as c:
     password = jsonhandler['password']
     invoker = jsonhandler['invoker']
     textargs = jsonhandler['textargs']
+    rminvokermsg = jsonhandler['autoremoveinvokermessage']
     advancedmode = jsonhandler['advancedmode']
-
+    silent = jsonhandler['silentmode']
 bot = commands.Bot(command_prefix=invoker, self_bot=True)
+
+# Bot Loading
 
 @bot.event
 async def on_ready():
-    print('Logged in as')
-    print(bot.user.name.encode("ascii","backslashreplace").decode())
-    print(bot.user.id)
-    print('------')
+    sp.call('clear',shell=True)
+    servers = len(bot.servers)
+    channels = len([c for c in bot.get_all_channels()])
+    login_time = datetime.datetime.utcnow() - uptime
+    login_time = login_time.seconds + login_time.microseconds/1E6
+    print("Login successful. ({}ms)".format(login_time))
+    print("-----------------------------------")
+    print("    Embedbot - Discord SelfBot")
+    print("-----------------------------------")
+    print("Running as: " + str(bot.user))
+    print("Connected to:")
+    print(" - {} servers".format(servers))
+    print(" - {} channels".format(channels))
+    print("-----------------------------------") 
+    if silent == "True" or rminvokermsg == "True":
+        if silent == "True":
+            if clintexists:
+                print(colored.yellow('Silentmode is Not Implemented yet.'))
+                return
+            else:
+                print('Silentmode is Not Implemented yet.')
+                return
+        if rminvokermsg == "True":
+            if clintexists:
+                print(colored.yellow('Autoremove Invoker message is Not Implemented yet.'))
+                return
+            else:
+                print('Autoremove Invoker message is Not Implemented yet.')
+                return
+        print("-----------------------------------")
+        return
     if clintexists:
-        print(colored.green('If you get any errors, please join https://discordapp.com/invite/KFYAUyw to complain about how I can\'t code.', bold=True))
+        print(colored.green('If you get any errors, please join https://discordapp.com/invite/KFYAUyw\nto complain about how I can\'t code.'))
     else:
-        print('If you get any errors, please join https://discordapp.com/invite/KFYAUyw to complain about how I can\'t code.')
+        print('If you get any errors, please join https://discordapp.com/invite/KFYAUyw\nto complain about how I can\'t code.')
         print('You don\'t have clint installed. Please install it with "pip install clint".')
     print('')
     bot.remove_command("help")
@@ -54,14 +102,21 @@ async def on_message(message):
 			
 @bot.command(pass_context=True)
 async def cls(ctx):
-    import subprocess as sp
-    tmp = sp.call('cls',shell=True)
-	
+    if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
+        tmp = sp.call('clear',shell=True)
+        await bot.edit_message(ctx.message, "`Cleared Console`")
+    if current_os == "Windows":
+        tmp = sp.call('cls' ,shell=True)
+        await bot.edit_message(ctx.message, "`Cleared Console`")
+    await asyncio.sleep(3)
+    await bot.delete_message(ctx.message)	
+
 @bot.command(pass_context=True)
 async def restart(ctx):
-    await bot.say("Restarting.")
+    await bot.edit_message(ctx.message, "`Restarting..`")
     print("Restarting.")
-    await asyncio.sleep(1)
+    await asyncio.sleep(2)
+    bot.delete_message(ctx.message)
     os.system(__file__)
     await bot.logout()
 		
@@ -71,12 +126,14 @@ async def nick(ctx):
         cmdarg = ctx.message.content.split(" ",1)[1]
         try:
             await bot.change_nickname(ctx.message.server.me, cmdarg)
-            msg = await bot.say("Your nickname on this server has been changed to **{}**.".format(cmdarg))
+            await asyncio.sleep(0.3)
+            msg = await bot.edit_message(ctx.message, "Your nickname on this server has been changed to **{}**.".format(cmdarg))
         except:
-            msg = await bot.say("Your nickname could not be changed on this server.")
+            msg = await bot.edit_message(ctx.message, "Your nickname could not be changed on this server.")
     except IndexError:
         await bot.change_nickname(ctx.message.server.me, "")
-        msg = await bot.say("Your nickname on this server has been reset.")
+        await asyncio.sleep(0.3)
+        msg = await bot.edit_message(ctx.message, "Your nickname on this server has been reset.")
     await asyncio.sleep(5)
     await bot.delete_message(ctx.message)
     await bot.delete_message(msg)
@@ -84,14 +141,17 @@ async def nick(ctx):
 @bot.command(pass_context=True, name="print")
 async def _print(ctx, asdf):
     print(asdf.encode("ascii","backslashreplace").decode())
+    ez = await bot.edit_message(ctx.message, "`Task Executed..`")
+    await asyncio.sleep(3)
+    await bot.delete_message(ez)
 	
 @bot.command(pass_context=True)
 async def test(ctx):
-    await bot.say("The selfbot is active.")
+    await bot.say("`The selfbot is active.`")
 	
 @bot.command(pass_context=True)
 async def kill(ctx):
-    await bot.say("Killed.")
+    await bot.say("`Killed.`")
     await asyncio.sleep(1)
     await bot.logout()
 
@@ -106,6 +166,47 @@ async def embeds(ctx, *, asdf):
             await bot.edit_message(ctx.message, "​", embed=em)
         else:
             await bot.say("I need the `embed links` permission to send an embed.")
+
+@bot.command(pass_context=True)
+async def clean(ctx, number: int, match_pattern: str = None):
+    channel = ctx.message.channel
+    author = ctx.message.author
+    r = await bot.edit_message(ctx.message, "`Deleting Messages..`")
+    to_delete = []
+
+    def content_match(_):
+        return True
+
+    def check(m):
+        if m.author.id != bot.user.id:
+            return False
+        elif content_match(m.content):
+            return True
+        return False
+
+    tries_left = 5
+    tmp = ctx.message
+
+    while tries_left and len(to_delete) < number:
+        async for message in bot.logs_from(channel, limit=100, before=tmp):
+            if len(to_delete) < number and check(message):
+                to_delete.append(message)
+            tmp = message
+        tries_left -= 1
+    to_delete.append(ctx.message)
+    await slow_deletion(to_delete)
+    r = await bot.say("`Task Executed Succesfully.`")
+    await asyncio.sleep(5)
+    await bot.delete_message(r)
+
+
+# Added for extra future use
+async def slow_deletion(messages):
+    for message in messages:
+        try:
+            await bot.delete_message(message)
+        except:
+            pass
 
 @bot.command(pass_context=True, name='eval')
 async def _eval(ctx, *, code : str):
