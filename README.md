@@ -19,8 +19,18 @@ __Usage__
 
 Open up config.json with any text editor.
 
-Change the email and pass to your email and apss
+Change the email and password to... your email and password.
 
-Change the invoker if you like
+Change the invoker if you like.
+
+If you have more than one account, the bot supports config arguments.
+
+If your config is named "Account1.json", run the file in your shell, with the argument "Account1.json".
+
+Example: embedbot.py Account1.json
+
+(This also help a lot with testing.)
+
+(Hey, sometimes I'm lazy.)
 
 If you like, you can use a token by replacing bot.run(email, password, bot=False) with bot.run("your token", bot=False).

@@ -1,2 +1,3 @@
 clint
 discord.py
+Cursor
