@@ -1,4 +1,4 @@
-# Embedbot 1.5.1 made by -Kiwi Catnip ♡#1540, @isy#0669 and @HYP3RD34TH#2104.
+# Embedbot 1.5.2 made by -Kiwi Catnip ♡#1540, @isy#0669 and @HYP3RD34TH#2104.
 # Thanks to @Dav999#3322 for helping with the code a lot.
 import subprocess as sp
 import asyncio
@@ -28,7 +28,7 @@ try:
 except:
     passedargs = None
 
-botversion = "1.5.1"
+botversion = "1.5.2"
 
 
 def I(hello):
@@ -112,16 +112,19 @@ try:
 except:
     customconfig = "config.json"
 
-with open(customconfig) as c:
-    jsonhandler = json.load(c)
-    token = jsonhandler['token']
-    email = jsonhandler['email']
-    password = jsonhandler['password']
-    invoker = jsonhandler['invoker']
-    textargs = jsonhandler['textargs']
-    rminvokermsg = jsonhandler['autoremoveinvokermessage']
-    advancedmode = jsonhandler['advancedmode']
-    silent = jsonhandler['silentmode']
+try:
+    with open(customconfig) as c:
+        jsonhandler = json.load(c)
+        token = jsonhandler['token']
+        email = jsonhandler['email']
+        password = jsonhandler['password']
+        invoker = jsonhandler['invoker']
+        textargs = jsonhandler['textargs']
+        rminvokermsg = jsonhandler['autoremoveinvokermessage']
+        advancedmode = jsonhandler['advancedmode']
+        silent = jsonhandler['silentmode']
+except:
+    print("There was a problem with you config file. Make sure that everything is up to date.")
 
 bot = commands.Bot(command_prefix=invoker, self_bot=True)
 invite_url = "https://discord.gg/KFYAUyw"
@@ -141,7 +144,7 @@ async def on_ready():
     login_time = login_time.seconds + login_time.microseconds/1E6
     print("-----------------------------------------------------------------")
     print("                 -Embedbot - Discord Selfbot-")
-    print("   Made by -Kiwi Catnip ♡#1540, isy#0669 and HYP3RD34TH#2104.")
+    print("   Made by -Kiwi Catnip \\u2661#1540, isy#0669 and HYP3RD34TH#2104.")
     print("-----------------------------------------------------------------")
     print("Login time         : {} milliseconds".format(login_time))
     print("Logged in as       : {} ({})".format(str(bot.user).encode("ascii", "backslashreplace").decode(), bot.user.id))
@@ -176,12 +179,12 @@ async def on_ready():
         else:
             pass
         print("-----------------------------------------------------------------")
-        print(colored.green('  If you get any errors, please join our support server with \n  the'),
-              colored.blue('{}support'.format(invoker)),
-              colored.green('command to complain about how We can\'t code.'))
+        print(colored.green('  If you get any errors, please join our support server with \n  the', bold=True),
+              colored.blue('{}support'.format(invoker), bold=True),
+              colored.green('command to complain about how we can\'t code.', bold=True))
     else:
         print('   If you get any errors, please join our support server with')
-        print('   the "{}support" command to complain about how We can\'t code.'.format(invoker))
+        print('   the "{}support" command to complain about how we can\'t code.'.format(invoker))
     print("-----------------------------------------------------------------")
     bot.remove_command("help")
     bot.remove_command("HelpFormatter")
@@ -211,8 +214,8 @@ async def _join_support(ctx):
     edit = bot.edit_message
     try:
         await bot.accept_invite(invite_url)
-        await edit(ctx.message, "`Joined Support server. (Alexia's Hangout)`\n"
-                                "`Check your servers's list.`")
+        await edit(ctx.message, "`Joined support server. (Alexia's Hangout)`\n"
+                                "`Check your server list.`")
         if rminvokermsg == "True":
             await asyncio.sleep(3)
             bot.delete_message(ctx.message)
@@ -220,7 +223,7 @@ async def _join_support(ctx):
             pass
     except discord.NotFound:
         await edit(ctx.message, "`The invite was invalid or expired.`\n"
-                                "`Please go to our Github page shown in the console...`")
+                                "`Please go to our github page shown in the console.`")
         print("Github page: https://goo.gl/kXy1oM")
     except discord.HTTPException:
         await edit(ctx.message, "`[ERROR]: wasn't able to join the server.`\n"
@@ -238,7 +241,7 @@ async def game(ctx, *, game=None):
         await bot.edit_message(ctx.message, 'Playing status changed to **{}**.'.format(game))
     else:
         await bot.change_presence(game=None, status=current_status)
-        await bot.edit_message(ctx.message, "`Cleared Playing status.`")
+        await bot.edit_message(ctx.message, "`Cleared playing status.`")
     await asyncio.sleep(3)
     await bot.delete_message(ctx.message)
 
@@ -367,7 +370,7 @@ async def embeds(ctx, *, asdf):
         else:
             await bot.edit_message(ctx.message,
                                    "I need the `embed links` permission to send an embed.")
-	    await bot.delete_message(ctx.message)
+        await bot.delete_message(ctx.message)
 
 
 @bot.command(pass_context=True)
@@ -418,13 +421,13 @@ async def _eval(ctx, *, code: str):
         code = code.strip('` ')
         if code == "token":
             await bot.say("You probably don't want to show your token.",
-                          " If you really do, please write {}eval str(email).".format(invoker))
+                          " If you really do, please write {}eval str(token).".format(invoker))
         elif code == "email":
             await bot.say("You probably don't want to show your email.",
                           " If you really do, please write {}eval str(email).".format(invoker))
         elif code == "password":
             await bot.say("You probably don't want to show your password.",
-                          " If you really do, please write {}eval str(email).".format(invoker))
+                          " If you really do, please write {}eval str(password).".format(invoker))
         else:
             python = '```py\n{}\n```'
             result = None
@@ -464,31 +467,43 @@ try:
                         # "None" because json doesn't have None.
     
         if "@" not in email or email == "None": # Checks email.
-            print("Invalid Email or None Provided..")
-            print("Please Check Credentials..")
+            thread.do_run = False
+            thread.join()
+            clear_screen()
+            print("Invalid email or none provided.")
+            print("Please check your credentials.")
         bot.run(email, password, bot=False)
     else:
         if len(token) < 50: # Checking Token's Length.
-            print("Token is to Short..")
-            print("Trying to use Email and Password instead..\n")
+            thread.do_run = False
+            thread.join()
+            clear_screen()
+            print("Token is to short.")
+            print("Try using your email and password instead.\n")
             if "@" not in email: # Checks email.
-                print("Invalid Email or None Provided..")
-                print("Please Check Credentials..")
+                print("Invalid email or none provided.")
+                print("Please check your credentials.")
                 sys.exit()
             else:
                 bot.run(email, password, bot=False)
         elif len(token) > 60: # Checking Token's Length.
-            print("Token is to Long..")
-            print("Trying to use Email and Password instead..\n")
+            thread.do_run = False
+            thread.join()
+            clear_screen()
+            print("Token is to long.")
+            print("Try using your email and password instead.\n")
             if "@" not in email: # Checks email.
-                print("Invalid Email or None Provided..")
-                print("Please Check Credentials..")
+                print("Invalid email or none provided.")
+                print("Please check your credentials.")
                 sys.exit()
             else: # 
                 bot.run(email, password, bot=False)
         elif password == "None": # Checks if there is a Password provided.
-            print("No Password Provided..")
-            print("Please Check Credentials..")
+            thread.do_run = False
+            thread.join()
+            clear_screen()
+            print("No password provided.")
+            print("Please check your credentials.")
             sys.exit()
         else:
             bot.run(token, bot=False)
