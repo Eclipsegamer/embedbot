@@ -367,6 +367,7 @@ async def embeds(ctx, *, asdf):
         else:
             await bot.edit_message(ctx.message,
                                    "I need the `embed links` permission to send an embed.")
+	    await bot.delete_message(ctx.message)
 
 
 @bot.command(pass_context=True)
@@ -399,7 +400,7 @@ async def clean(ctx, number: int, match_pattern: str=None):
     await slow_deletion(to_delete)
     r = await bot.say("`Task executed succesfully.`")
     await asyncio.sleep(3)
-    await bot.delete_message(ctx.message)
+    await bot.delete_message(r)
     
 
 # Added for extra future use
@@ -497,4 +498,4 @@ except:
     print("If you haven't already, please add your credentials in config.json,")
     print("and make sure they're correct.")
     time.sleep(5)
-    sys.exit(status)
+    sys.exit()
