@@ -264,7 +264,7 @@ async def status(ctx, *, status=None):
     else:
         status = statuses.get(status.lower(), None)
         await bot.change_presence(status=status, game=current_game)
-        await bot.edit_message(ctx.message, "Status set to **{}**.")
+        await bot.edit_message(ctx.message, "Status set to **{}**.".format(status))
     await asyncio.sleep(3)
     await bot.delete_message(ctx.message)
 
@@ -356,7 +356,7 @@ async def quote(ctx, m: discord.Member, *, asdf):
             await bot.edit_message(ctx.message,
                                    "I need the `embed links` permission to send an embed.")
             await asyncio.sleep(3)
-            await bot.delete_message(ctx.message)
+
 
 @bot.command(pass_context=True)
 async def embeds(ctx, *, asdf):
@@ -370,7 +370,7 @@ async def embeds(ctx, *, asdf):
         else:
             await bot.edit_message(ctx.message,
                                    "I need the `embed links` permission to send an embed.")
-        await bot.delete_message(ctx.message)
+
 
 
 @bot.command(pass_context=True)
