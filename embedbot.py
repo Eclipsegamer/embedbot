@@ -1,4 +1,4 @@
-# Embedbot 1.5.2 made by -Kiwi Catnip ♡#1540, @isy#0669 and @HYP3RD34TH#2104.
+# Embedbot 1.5.3 made by -Kiwi Catnip ♡#1540, @isy#0669 and @HYP3RD34TH#2104.
 # Thanks to @Dav999#3322 for helping with the code a lot.
 import subprocess as sp
 import asyncio
@@ -28,7 +28,7 @@ try:
 except:
     passedargs = None
 
-botversion = "1.5.2"
+botversion = "1.5.3"
 
 
 def I(hello):
@@ -498,13 +498,6 @@ try:
                 sys.exit()
             else: # 
                 bot.run(email, password, bot=False)
-        elif password == "None": # Checks if there is a Password provided.
-            thread.do_run = False
-            thread.join()
-            clear_screen()
-            print("No password provided.")
-            print("Please check your credentials.")
-            sys.exit()
         else:
             bot.run(token, bot=False)
 except:
