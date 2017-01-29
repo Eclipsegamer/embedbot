@@ -13,7 +13,7 @@ Custom embeds!
 
 Text triggers!
 
-![Example of text triggers](https://files.catbox.moe/1z2kiq.gif)
+![Example of text triggers](https://files.catbox.moe/vnviqz.gif)
 
 __Usage__
 
