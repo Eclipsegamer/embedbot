@@ -198,6 +198,37 @@ async def on_message(message):
                 await bot.edit_message(message, messagereplace)
     await bot.process_commands(message)
 
+	
+@bot.command(pass_context=True)
+async def update(ctx):
+    await bot.say("Updating...")
+    import platform
+    try:
+        from git import Repo
+    except ImportError:
+        await bot.say("Please install the module gitpython.".format(pip_os))
+        return
+    import shutil
+    from distutils.dir_util import copy_tree
+    import stat
+    try:
+        os.remove("oldconfig.json")
+    except:
+        pass
+    os.rename("config.json", "oldconfig.json")
+    os.remove("embedbot.py") #lol r i p embedbot if this doesn't work r i p my work
+    os.remove("README.md")
+    os.remove("requirements.txt")
+    repo_url = "https://www.github.com/Luigimaster1/embedbot.git"
+    local_dir = "./tempupdate/"
+    Repo.clone_from(repo_url, local_dir)
+    def del_rw(action, name, exc):
+        os.chmod(name, stat.S_IWRITE)
+        os.remove(name)
+    shutil.rmtree("./tempupdate/.git/", onerror=del_rw)
+    copy_tree(local_dir, ".")
+    shutil.rmtree("./tempupdate/", onerror=del_rw)
+    await bot.say("The bot has been updated. Please restart the bot.")
 @bot.command(pass_context=True)
 async def cls(ctx):
     if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
@@ -276,19 +307,14 @@ async def restart(ctx):
     bot.delete_message(ctx.message)
     if current_os == "Windows":
         if passedargs == None:
-            os.system(__file__)
+            os.system('"' + __file__ + '"')
         else:
-            os.system(__file__ + " " + passedargs)
+            os.system('"' + __file__ + '" ' + passedargs)
     if current_os == "Linux":
         if passedargs == None:
-            os.system('''sudo bash -c "python3 {}"'''.format(__file__))
+            os.system('''sudo bash -c "python3 {}"'''.format('"' + __file__ + '"'))
         else:
-            os.system('''sudo bash -c "python3 {} {}"'''.format(__file__, passedargs))
-    if current_os == "Linux":
-        if passedargs == None:
-            os.system('''sudo bash "python3 {}"'''.format(__file__))
-        else:
-            os.system('''sudo bash "python3 {} {}"'''.format(__file__, passedargs))
+            os.system('''sudo bash -c "python3 {} {}"'''.format('"' + __file__ + '" ' + passedargs))
     await bot.logout()
 
 @bot.command(pass_context=True)

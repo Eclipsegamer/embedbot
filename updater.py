@@ -1,5 +1,7 @@
+print("Embedbot updater - for if the update command doesn't work.")
 import platform
 import sys
+import time
 current_os = platform.system()
 try:
     from git import Repo
@@ -38,3 +40,4 @@ print("You can update your oldconfig.json file, and rename oldconfig.json back t
 print("If you use a custom config like in the examples, nothing will be replaced, but you will still have the oldconfig.json.")
 print("You can ignore that, and delete it.")
 print("\n\n\n\nEmbedbot updater version 1.0, horribly coded by -Kiwi Catnip \\u2661#1540.\nProbably no rights reserved.")
+time.sleep(5)
