@@ -124,7 +124,7 @@ try:
         advancedmode = jsonhandler['advancedmode']
         silent = jsonhandler['silentmode']
 except:
-    print("There was a problem with you config file. Make sure that everything is up to date.")
+    print("There was a problem with your config file. Make sure that everything is up to date.")
 
 bot = commands.Bot(command_prefix=invoker, self_bot=True)
 invite_url = "https://discord.gg/KFYAUyw"
@@ -199,6 +199,35 @@ async def on_message(message):
     await bot.process_commands(message)
 
 	
+	
+@bot.command(pass_context=True)
+async def info(ctx):
+    if type(ctx.message.channel) == discord.PrivateChannel:
+        embedsendable = True
+        em = discord.Embed(description="Embedbot information", colour=0xFFFFFF)
+    elif ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
+        em = discord.Embed(description="Embedbot information", colour=ctx.message.author.color) 
+        embedsendable = True
+    else:
+        embedsendable = False
+    if embedsendable:
+        em.add_field(name="Discord.py version:", value="{}.{}.{} {}".format(discord.version_info[0], discord.version_info[1], discord.version_info[2], discord.version_info[3]), inline=True)
+        em.add_field(name="Embedbot version:", value=botversion, inline=True)
+        em.add_field(name="Made by:", value="-Kiwi Catnip ♡#1540, isy#0669 and HYP3RD34TH#2104.", inline=True)	 
+        em.add_field(name="According to all known laws of aviation,", value="a bee should not be able to fly.", inline=True)
+        em.add_field(name="Github project:", value="https://www.github.com/Luigimaster1/embedbot", inline=True)
+    try:
+        await bot.edit_message(ctx.message, "​", embed=em)
+    except:
+        await bot.say("Discord.py version: {}.{}.{} {}\n",
+        "Embedbot version: {}\n",
+        "Made by: -Kiwi Catnip ♡#1540, isy#0669 and HYP3RD34TH#2104.\n",
+        "According to all known laws of aviation, a bee should not be able to fly.\n",
+        "Github project: https://www.github.com/Luigimaster1/embedbot"
+        .format(discord.version_info[0], discord.version_info[1], discord.version_info[2], discord.version_info[3], botversion)
+	 
+        await bot.say()
+        await bot.say()
 @bot.command(pass_context=True)
 async def update(ctx):
     await bot.say("Updating...")
