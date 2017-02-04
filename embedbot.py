@@ -12,6 +12,9 @@ import json
 import time
 import threading
 import itertools
+import urllib.request
+import textwrap
+from urllib import request
 current_os = platform.system()
 try:
     from PIL import Image
@@ -22,6 +25,10 @@ except ImportError:
         pip_os = "pip"
     print("Please run \"{} install pillow\".".format(pip_os))
     sys.exit()
+import PIL.ImageOps
+from PIL import ImageFilter
+from PIL import ImageFont
+from PIL import ImageDraw
 try:
     import cursor
 except ImportError:
@@ -520,11 +527,6 @@ async def _eval(ctx, *, code: str):
 
 @bot.group(pass_context=True)
 async def blur(ctx):
-    from PIL import Image
-    import urllib.request
-    from urllib import request
-    import PIL.ImageOps
-    from PIL import ImageFilter
     if ctx.subcommand_passed is None:
         if ctx.message.attachments != []:
             attachtoretrieve = urllib.request.Request(
@@ -547,9 +549,6 @@ async def blur(ctx):
         else:
             await bot.say("Please enter a link after the command.")
     else:
-        from PIL import Image
-        import PIL.ImageOps
-        from urllib import request
         attachtoretrieve = urllib.request.Request(
             ctx.subcommand_passed,
             data=None,
@@ -570,10 +569,6 @@ async def blur(ctx):
 		
 @bot.command(pass_context=True)
 async def undertext(ctx, *, inputtext):
-    from PIL import Image
-    from PIL import ImageFont
-    from PIL import ImageDraw
-    import textwrap
     img = Image.open(".\Resources\Images\Input\Textbox.png")
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype("DTM-Mono.otf", 130)
@@ -589,10 +584,6 @@ async def undertext(ctx, *, inputtext):
 
 @bot.group(pass_context=True)
 async def invert(ctx):
-    from PIL import Image
-    import urllib.request
-    from urllib import request
-    import PIL.ImageOps
     if ctx.subcommand_passed is None:
         if ctx.message.attachments != []:
             attachtoretrieve = urllib.request.Request(
@@ -615,9 +606,6 @@ async def invert(ctx):
         else:
             await bot.say("Please enter a link after the command.")
     else:
-        from PIL import Image
-        import PIL.ImageOps
-        from urllib import request
         attachtoretrieve = urllib.request.Request(
             ctx.subcommand_passed,
             data=None,
