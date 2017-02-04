@@ -14,6 +14,15 @@ import threading
 import itertools
 current_os = platform.system()
 try:
+    from PIL import Image
+except ImportError:
+    if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
+        pip_os = "pip3"
+    if current_os == "Windows":
+        pip_os = "pip"
+    print("Please run \"{} install pillow\".".format(pip_os))
+    sys.exit()
+try:
     import cursor
 except ImportError:
     if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
@@ -224,10 +233,8 @@ async def info(ctx):
         "Made by: -Kiwi Catnip ♡#1540, isy#0669 and HYP3RD34TH#2104.\n",
         "According to all known laws of aviation, a bee should not be able to fly.\n",
         "Github project: https://www.github.com/Luigimaster1/embedbot"
-        .format(discord.version_info[0], discord.version_info[1], discord.version_info[2], discord.version_info[3], botversion)
-	 
-        await bot.say()
-        await bot.say()
+        .format(discord.version_info[0], discord.version_info[1], discord.version_info[2], discord.version_info[3], botversion))
+
 @bot.command(pass_context=True)
 async def update(ctx):
     await bot.say("Updating...")
@@ -353,7 +360,7 @@ async def nick(ctx):
         try:
             await bot.change_nickname(ctx.message.server.me, cmdarg)
             await asyncio.sleep(0.3)
-            m = await bot.edit_message(ctx.message, "Your nickname on this server has been changed"
+            m = await bot.edit_message(ctx.message, "Your nickname on this server has been changed",
                                                     " to **{}**.".format(cmdarg))
             if rminvokermsg == "True":
                 await asyncio.sleep(3)
@@ -361,8 +368,7 @@ async def nick(ctx):
             else:
                 pass
         except:
-            m = await bot.edit_message(ctx.message, "Your nickname could not be",
-                                       " changed on this server.")
+            m = await bot.edit_message(ctx.message, "Your nickname could not be changed on this server.")
         await asyncio.sleep(3)
         await bot.delete_message(ctx.message)
     except IndexError:
@@ -511,6 +517,124 @@ async def _eval(ctx, *, code: str):
         await bot.delete_message(r)
 
 # ----- Non useful commands ----- #
+
+@bot.group(pass_context=True)
+async def blur(ctx):
+    from PIL import Image
+    import urllib.request
+    from urllib import request
+    import PIL.ImageOps
+    from PIL import ImageFilter
+    if ctx.subcommand_passed is None:
+        if ctx.message.attachments != []:
+            attachtoretrieve = urllib.request.Request(
+                ctx.message.attachments[0]['url'],
+                data=None,
+                headers={
+                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+                    }
+                )
+            actuallyretrieving = urllib.request.urlopen(attachtoretrieve)
+            with open("OhYes.png", 'wb') as f:
+                f.write(actuallyretrieving.read())
+                f.close()
+                actuallyretrieving.close()
+            image = Image.open('OhYes.png')
+            inverted_image = image.filter(ImageFilter.GaussianBlur(radius=2))
+            inverted_image.save('result.png')
+            await bot.send_file(ctx.message.channel, "result.png")
+            os.remove("result.png")
+        else:
+            await bot.say("Please enter a link after the command.")
+    else:
+        from PIL import Image
+        import PIL.ImageOps
+        from urllib import request
+        attachtoretrieve = urllib.request.Request(
+            ctx.subcommand_passed,
+            data=None,
+            headers={
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+                }
+            )
+        actuallyretrieving = urllib.request.urlopen(attachtoretrieve)
+        with open("OhYes.png", 'wb') as f:
+            f.write(actuallyretrieving.read())
+            f.close()
+            actuallyretrieving.close()
+        image = Image.open('OhYes.png')
+        inverted_image = image.filter(ImageFilter.GaussianBlur(radius=2))
+        inverted_image.save('result.png')
+        await bot.send_file(ctx.message.channel, "result.png")
+        os.remove("result.png")
+		
+@bot.command(pass_context=True)
+async def undertext(ctx, *, inputtext):
+    from PIL import Image
+    from PIL import ImageFont
+    from PIL import ImageDraw
+    import textwrap
+    img = Image.open(".\Resources\Images\Input\Textbox.png")
+    draw = ImageDraw.Draw(img)
+    font = ImageFont.truetype("DTM-Mono.otf", 130)
+    margin = 170
+    offset = 100
+    textline = textwrap.wrap(inputtext, width=33)
+    for line in textline:
+        draw.text((margin, offset), line,(255,255,255),font=font)
+        offset += 200
+    img.save(".\Resources\Images\Output\Textbox.png")
+    await bot.send_file(ctx.message.channel, ".\Resources\Images\Output\Textbox.png")
+    os.remove(".\Resources\Images\Output\Textbox.png")
+
+@bot.group(pass_context=True)
+async def invert(ctx):
+    from PIL import Image
+    import urllib.request
+    from urllib import request
+    import PIL.ImageOps
+    if ctx.subcommand_passed is None:
+        if ctx.message.attachments != []:
+            attachtoretrieve = urllib.request.Request(
+                ctx.message.attachments[0]['url'],
+                data=None,
+                headers={
+                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+                    }
+                )
+            actuallyretrieving = urllib.request.urlopen(attachtoretrieve)
+            with open("OhYes.png", 'wb') as f:
+                f.write(actuallyretrieving.read())
+                f.close()
+                actuallyretrieving.close()
+            image = Image.open('OhYes.png')
+            inverted_image = PIL.ImageOps.invert(image)
+            inverted_image.save('result.png')
+            await bot.send_file(ctx.message.channel, "result.png")
+            os.remove("result.png")
+        else:
+            await bot.say("Please enter a link after the command.")
+    else:
+        from PIL import Image
+        import PIL.ImageOps
+        from urllib import request
+        attachtoretrieve = urllib.request.Request(
+            ctx.subcommand_passed,
+            data=None,
+            headers={
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+                }
+            )
+        actuallyretrieving = urllib.request.urlopen(attachtoretrieve)
+        with open("OhYes.png", 'wb') as f:
+            f.write(actuallyretrieving.read())
+            f.close()
+            actuallyretrieving.close()
+        image = Image.open('OhYes.png')
+        inverted_image = PIL.ImageOps.invert(image)
+        inverted_image.save('result.png')
+        await bot.send_file(ctx.message.channel, "result.png")
+        os.remove("result.png")
 
 @bot.command(pass_context=True)
 async def f(ctx):
