@@ -571,7 +571,7 @@ async def blur(ctx):
 async def undertext(ctx, *, inputtext):
     img = Image.open(".\Resources\Images\Input\Textbox.png")
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype("DTM-Mono.otf", 130)
+    font = ImageFont.truetype(".\Recources\Fonts\DTM-Mono.otf", 130)
     margin = 170
     offset = 100
     textline = textwrap.wrap(inputtext, width=33)
