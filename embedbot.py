@@ -15,21 +15,27 @@ import itertools
 import urllib.request
 import textwrap
 import random
+import pip
 from urllib import request
+def install(package):
+    pip.main(['install', package])
 current_os = platform.system()
+installlist = []
+needinstall = False
 try:
     from PIL import Image
+    import PIL.ImageOps
+    from PIL import ImageFilter
+    from PIL import ImageFont
+    from PIL import ImageDraw
 except ImportError:
     if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
         pip_os = "pip3"
     if current_os == "Windows":
         pip_os = "pip"
+    installlist.append("pillow")
     print("Please run \"{} install pillow\".".format(pip_os))
-    sys.exit()
-import PIL.ImageOps
-from PIL import ImageFilter
-from PIL import ImageFont
-from PIL import ImageDraw
+    needinstall = True
 try:
     import cursor
 except ImportError:
@@ -37,7 +43,16 @@ except ImportError:
         pip_os = "pip3"
     if current_os == "Windows":
         pip_os = "pip"
+    installlist.append("Cursor")
     print("Please run \"{} install Cursor\".".format(pip_os))
+    needinstall = True
+instimporterror = False
+if needinstall:
+    print("Attempting to install them.")
+    for pipinstall in installlist:
+            install(pipinstall)
+    print("If there were any errors, please run embedbot with admininstrator privileges, or please use pip to install them.\nIf there was no errors, you can now run embedbot normally.")
+    time.sleep(3)
     sys.exit()
 logged_in = False
 try:
@@ -282,6 +297,8 @@ async def on_ready():
                 await helpembed("f", "pays respects.", "{}f".format(invoker))
             elif ctx.subcommand_passed == "eval":
                 await helpembed("eval", "evaluates a command of your choice.", "{}eval `your code`".format(invoker))
+            elif ctx.subcommand_passed == "memberundertale":
+                await helpembed("memberundertale", "sends the amount of people with Undertale related usernames or nicknames in the current server.", "{}memberundertale".format(invoker))
             else:
                 sendhelpem = False
                 if type(ctx.message.channel) == discord.PrivateChannel:
@@ -296,7 +313,7 @@ async def on_ready():
                     em.add_field(name="Normal commands:", value="embeds, quote, clean", inline=True)
                     em.add_field(name="Helpful/technical commands:", value="info, update, cls, support, kill, restart, print, test", inline=True)
                     em.add_field(name="Profile commands:", value="game, nick, status", inline=True)
-                    em.add_field(name="Useless commands:", value="blur, undertext, invert, f", inline=True)
+                    em.add_field(name="Useless commands:", value="blur, undertext, invert, f, memberundertale", inline=True)
                     em.add_field(name="Advanced mode commands:", value="eval", inline=True)
                     em.set_footer(text="You can use {}help (command) to get the information of that command.".format(invoker))
                 try:
@@ -308,6 +325,8 @@ async def on_ready():
                                     "Useless commands: blur, undertext, invert, f"
                                     "Advanced mode commands: eval"
                                     "You can use {}help (command) to get the information of that command.")
+        else:
+            await bot.say("Please run the command where you have the send embeds permission.")
 
 @bot.event
 async def on_message(message):
@@ -621,6 +640,21 @@ async def _eval(ctx, *, code: str):
         await asyncio.sleep(3)
         await bot.delete_message(r)
 
+		
+		
+		
+		
+@bot.command(pass_context=True)
+async def memberundertale(ctx):
+    haswith = ['Frisk', 'Flowey', 'Toriel', 'Papyrus', 'Sans', 'Undyne', 'Mettaton', 'Alphys', 'ASGORE', 'Asriel', 'Chara', 'Gaster', 'Temmie', 'Grillby']
+    people = []
+
+    for i in haswith:
+        for member in ctx.message.server.members:
+            if i.lower() in member.display_name.lower():
+                people.append(member)
+
+    await bot.edit_message(ctx.message, "{} out of {} member(s) of this server have undertale related nicknames or usernames.".format(len(people), len(ctx.message.server.members)))
 # ----- Non useful commands ----- #
 
 
