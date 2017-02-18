@@ -246,11 +246,7 @@ async def on_ready():
         if embedsendable:
             message = ctx.message
             async def helpembed(command, description, usage):
-                if type(message.channel) == discord.PrivateChannel:
-                    em = discord.Embed(description=command, colour=0xFFFFFF)
-                elif message.server.me.permissions_in(message.channel).embed_links == True:
-                    em = discord.Embed(description=command, colour=usercol)
-
+                em = discord.Embed(description=command, colour=usercol)
                 em.add_field(name="Help for {}:".format(command), value="{}{} {}".format(invoker, command, description), inline=True)
                 em.add_field(name="Usage:", value=usage, inline=True)
                 sethelpem = True
@@ -258,7 +254,10 @@ async def on_ready():
                     await bot.edit_message(ctx.message, "​", embed=em)
                 except:
                     await bot.say("Help for {}: {}{} {}\nUsage: {}".format(command, invoker, command, description, usage))
-            usercol = ctx.message.author.color
+            if type(message.channel) == discord.PrivateChannel:
+                usercol = 0xFFFFFF
+            elif message.server.me.permissions_in(message.channel).embed_links == True:
+                usercol = ctx.message.author.color
             if ctx.subcommand_passed == "embeds":
                 await helpembed("embeds", "sends an embed with the message of your choice.", "{}embeds `message`".format(invoker))
             elif ctx.subcommand_passed == "quote":
@@ -324,7 +323,7 @@ async def on_ready():
                                     "Profile commands: game, nick, status"
                                     "Useless commands: blur, undertext, invert, f"
                                     "Advanced mode commands: eval"
-                                    "You can use {}help (command) to get the information of that command.")
+                                    "You can use {}help (command) to get the information of that command.".format(invoker))
         else:
             await bot.say("Please run the command where you have the send embeds permission.")
 
@@ -586,7 +585,7 @@ async def clean(ctx, number: int, match_pattern: str=None):
         tries_left -= 1
     to_delete.append(ctx.message)
     await slow_deletion(to_delete)
-    r = await bot.say("`Task executed succesfully.`")
+    await bot.edit_message(r, "`Task executed succesfully.`")
     await asyncio.sleep(3)
     await bot.delete_message(r)
     
