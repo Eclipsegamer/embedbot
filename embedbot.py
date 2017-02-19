@@ -1,22 +1,42 @@
-# Embedbot 1.5.3 made by -Kiwi Catnip ♡#1540, @isy#0669 and @HYP3RD34TH#2104.
+# Embedbot 1.5.4 made by -Kiwi Catnip ♡#1540, @isy#0669 and @HYP3RD34TH#2104.
 # Thanks to @Dav999#3322 for helping with the code a lot.
+botversion = "1.5.4"
+changes = "+Added the changelog command\n+Added prints on imports\n+Added the getinvite command"
+print("Importing modules...")
 import subprocess as sp
+print("Imported subprocess...")
 import asyncio
+print("Imported asyncio...")
 import inspect
+print("Imported inspect...")
 import os
+print("Imported os...")
 import datetime
+print("Imported datetime...")
 import platform
+print("Imported platform...")
 import sys
+print("Imported sys...")
 import traceback
+print("Imported traceback...")
 import json
+print("Imported json...")
 import time
+print("Imported time...")
 import threading
+print("Imported threading...")
 import itertools
+print("Imported itertools...")
 import urllib.request
+print("Imported urllib.request...")
 import textwrap
+print("Imported textwrap...")
 import random
+print("Imported random...")
 import pip
+print("Imported pip...")
 from urllib import request
+print("Imported request from urllib...")
 def install(package):
     pip.main(['install', package])
 current_os = platform.system()
@@ -28,6 +48,7 @@ try:
     from PIL import ImageFilter
     from PIL import ImageFont
     from PIL import ImageDraw
+    print("Imported pillow...")
 except ImportError:
     if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
         pip_os = "pip3"
@@ -38,6 +59,7 @@ except ImportError:
     needinstall = True
 try:
     import cursor
+    print("Imported cursor...")
 except ImportError:
     if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
         pip_os = "pip3"
@@ -54,12 +76,13 @@ if needinstall:
     print("If there were any errors, please run embedbot with admininstrator privileges, or please use pip to install them.\nIf there was no errors, you can now run embedbot normally.")
     time.sleep(3)
     sys.exit()
+print("Done.")
+time.sleep(1)
 logged_in = False
 try:
     passedargs = sys.argv[1]
 except:
     passedargs = None
-botversion = "1.5.3"
 
 def I(hello):
     why_are_you_here = "?"
@@ -133,7 +156,7 @@ starttext = [
     "Bad code awaits you.",
     "You ready for this?",
     "*Crunch* NO DON'T TOUCH THAT!",
-    "Come on, BetterDiscord isn't *that* bad. I just prefer beautifuldiscord... because it doesn't blow up your computer."
+    "BetterDiscord more like sweaterdiscord because nobody wants it"
 ]
 print(random.choice(starttext))
 load = itertools.cycle(['.  ', '.. ', '...', '   '])
@@ -298,6 +321,10 @@ async def on_ready():
                 await helpembed("eval", "evaluates a command of your choice.", "{}eval `your code`".format(invoker))
             elif ctx.subcommand_passed == "memberundertale":
                 await helpembed("memberundertale", "sends the amount of people with Undertale related usernames or nicknames in the current server.", "{}memberundertale".format(invoker))
+            elif ctx.subcommand_passed == "getinvite":
+                await helpembed("getinvite", "creates an invite from your current server, or a server specified.", "{}getinvite `optional: server name`".format(invoker))
+            elif ctx.subcommand_passed == "changelog":
+                await helpembed("changelog", "shows the changelog for the current version.", "{}changelog".format(invoker))
             else:
                 sendhelpem = False
                 if type(ctx.message.channel) == discord.PrivateChannel:
@@ -654,6 +681,25 @@ async def memberundertale(ctx):
                 people.append(member)
 
     await bot.edit_message(ctx.message, "{} out of {} member(s) of this server have undertale related nicknames or usernames.".format(len(people), len(ctx.message.server.members)))
+
+	
+@bot.command(pass_context=True)
+async def getinvite(ctx, *, invitearg = None):
+    if invitearg: 
+        #servera = discord.utils.get(bot.servers, name=invitearg)
+        servera = discord.utils.get(bot.servers, name=invitearg)
+        if not servera == None:
+            invitea = await bot.create_invite(servera)
+        else:
+            invitea = "That server doesn't exist."
+        await bot.say(invitea)
+        return
+    invite = await bot.create_invite(ctx.message.server)
+    await bot.say(invite)
+
+@bot.command(pass_context=True)
+async def changelog(ctx):
+    await bot.say("Changes for {}:\n{}".format(botversion, changes))
 # ----- Non useful commands ----- #
 
 
