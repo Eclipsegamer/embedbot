@@ -1,7 +1,9 @@
-# Embedbot 1.5.4 made by -Kiwi Catnip ♡#1540, @isy#0669 and @HYP3RD34TH#2104.
+# Embedbot 1.6 made by -Kiwi Catnip ♡#1540, @isy#0669 and @HYP3RD34TH#2104.
 # Thanks to @Dav999#3322 for helping with the code a lot.
-botversion = "1.5.4"
-changes = "+Added the changelog command\n+Added prints on imports\n+Added the getinvite command"
+# Thanks to @Info Teddy#3737 for the help code that I stole from [\].
+# Oops.
+botversion = "1.6"
+changes = "*Edited the help command to use a json file instead of a elif chain."
 print("Importing modules...")
 import subprocess as sp
 print("Imported subprocess...")
@@ -174,8 +176,19 @@ def loggingin():
                 break
 thread = threading.Thread(target=loggingin)
 thread.start()
-# Config loading
+# Strings loading
+def loadstrings():
+    # Totally not copied from [\]
+    # sorry info
+	stringsf = open('.\Resources\strings.json', 'r')
+	stringsfr = stringsf.read()
+	strings = json.loads(stringsfr)
+	global cmds
+	cmds = strings['cmds']
 
+loadstrings()
+
+# Config loading
 try:
     customconfig = sys.argv[1]
 except:
@@ -198,6 +211,30 @@ except:
 bot = commands.Bot(command_prefix=invoker, self_bot=True)
 invite_url = "https://discord.gg/KFYAUyw"
 # Bot Loading
+
+
+def helplist(cats, onlycat=None):
+	returnage = ''
+	for cat in cats:
+		if (onlycat == None and cat['cat_shown']) or onlycat == cat['cat_slug']:
+			if onlycat == None:
+				returnage += '\n\n__`{}:`__ — For command descriptions: **`\help {}`**'.format(cat['cat_name'], cat['cat_slug'])
+			else:
+				if cat['cat_desc'] != '':
+					returnage += cat['cat_desc']
+				returnage += '\n__`{}:`__'.format(cat['cat_name'])
+
+			first = True
+			for cmd in cat['commands']:
+				if onlycat == None:
+					if first:
+						returnage += '\n`\{}`'.format(cmd['name'])
+						first = False
+					else:
+						returnage += '   `\{}`'.format(cmd['name'])
+				else:
+					returnage += '\n`\{}` – {}'.format(cmd['name'], cmd['short'])
+	return returnage
 
 @bot.event
 async def on_ready():
@@ -247,7 +284,6 @@ async def on_ready():
                 print('  Clint is not installed (use "{} {}" to install clint)'.format(pip_os, c))
         else:
             pass
-        print("-----------------------------------------------------------------")
         print(colored.green('  If you get any errors, please join our support server with \n  the', bold=True),
               colored.blue('{}support'.format(invoker), bold=True),
               colored.green('command to complain about how we can\'t code.', bold=True))
@@ -259,100 +295,56 @@ async def on_ready():
     bot.remove_command("HelpFormatter")
     @bot.group(pass_context=True)
     async def help(ctx):
-        """Help"""
-        if type(ctx.message.channel) == discord.PrivateChannel:
-            embedsendable = True
-        elif ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
-            embedsendable = True
-        else:
-            embedsendable = False
-        if embedsendable:
-            message = ctx.message
-            async def helpembed(command, description, usage):
-                em = discord.Embed(description=command, colour=usercol)
-                em.add_field(name="Help for {}:".format(command), value="{}{} {}".format(invoker, command, description), inline=True)
-                em.add_field(name="Usage:", value=usage, inline=True)
-                sethelpem = True
-                try:
-                    await bot.edit_message(ctx.message, "​", embed=em)
-                except:
-                    await bot.say("Help for {}: {}{} {}\nUsage: {}".format(command, invoker, command, description, usage))
-            if type(message.channel) == discord.PrivateChannel:
-                usercol = 0xFFFFFF
-            elif message.server.me.permissions_in(message.channel).embed_links == True:
-                usercol = ctx.message.author.color
-            if ctx.subcommand_passed == "embeds":
-                await helpembed("embeds", "sends an embed with the message of your choice.", "{}embeds `message`".format(invoker))
-            elif ctx.subcommand_passed == "quote":
-                await helpembed("quote", "sends an embed with someone's message, with their avatar and username.", "{}quote `the user's name` `their message`".format(invoker))
-            elif ctx.subcommand_passed == "clean":
-                await helpembed("clean", "deletes your messages up to a limit.", "{}clean `the number of messages to delete`".format(invoker))
-            elif ctx.subcommand_passed == "info":
-                await helpembed("info", "gives you information about the bot.", "{}info".format(invoker))
-            elif ctx.subcommand_passed == "update":
-                await helpembed("update", "\"updates\" your version of embedbot. Technically it deletes the bots files and redownloads them from the github. Oops.", "{}update".format(invoker))
-            elif ctx.subcommand_passed == "cls":
-                await helpembed("cls", "clears your console's screen.", "{}cls".format(invoker))
-            elif ctx.subcommand_passed == "support":
-                await helpembed("support", "makes you join the embedbot support server. (it's not really a support server but we have a channel for it soooo)", "{}support".format(invoker))
-            elif ctx.subcommand_passed == "kill":
-                await helpembed("kill", "is kind of harsh because it kil- shuts off the bot.", "{}kill".format(invoker))
-            elif ctx.subcommand_passed == "restart":
-                await helpembed("restart", "restarts the bot.", "{}restart".format(invoker))
-            elif ctx.subcommand_passed == "print":
-                await helpembed("print", "prints to the bot's console.", "{}print `message`".format(invoker))
-            elif ctx.subcommand_passed == "test":
-                await helpembed("test", "tells you if the bot is active. Kinda useless but whatever.", "{}test".format(invoker))
-            elif ctx.subcommand_passed == "game":
-                await helpembed("game", "changes your playing status. Note: It won't show up for your client, but it _will_ show up for others.", "{}game `message`".format(invoker))
-            elif ctx.subcommand_passed == "nick":
-                await helpembed("nick", "changes your nickname on the current server.", "{}nick `your new nickname`".format(invoker))
-            elif ctx.subcommand_passed == "status":
-                await helpembed("status", "changes your status.", "{}status `online, idle, dnd, offline`".format(invoker))
-            elif ctx.subcommand_passed == "blur":
-                await helpembed("blur", "blurs your image. You can provide a link or you can send an image with the command as a caption.", "{}blur `your image.`".format(invoker))
-            elif ctx.subcommand_passed == "undertext":
-                await helpembed("undertext", "makes a textbox from Undertale with the message of your choice. It's more of a testing command but it's pretty cool.", "{}undertext `message`".format(invoker))
-            elif ctx.subcommand_passed == "invert":
-                await helpembed("invert", "inverts an image. Never depend on it, it doesn't always work. You can provide a link or you can send an image with the command as a caption.", "{}invert `your image`".format(invoker))
-            elif ctx.subcommand_passed == "f":
-                await helpembed("f", "pays respects.", "{}f".format(invoker))
-            elif ctx.subcommand_passed == "eval":
-                await helpembed("eval", "evaluates a command of your choice.", "{}eval `your code`".format(invoker))
-            elif ctx.subcommand_passed == "memberundertale":
-                await helpembed("memberundertale", "sends the amount of people with Undertale related usernames or nicknames in the current server.", "{}memberundertale".format(invoker))
-            elif ctx.subcommand_passed == "getinvite":
-                await helpembed("getinvite", "creates an invite from your current server, or a server specified.", "{}getinvite `optional: server name`".format(invoker))
-            elif ctx.subcommand_passed == "changelog":
-                await helpembed("changelog", "shows the changelog for the current version.", "{}changelog".format(invoker))
+        # Also copied from [\]
+        # sorry info
+        try:
+            cmdarg = ctx.message.content.split(" ", 1)[1]
+            helpf = True
+        except IndexError:
+            helpf = False
+            if type(ctx.message.channel) == discord.PrivateChannel:
+                embedsendable = True
+                em = discord.Embed(description="Help", colour=0xFFFFFF)
+            elif ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
+                em = discord.Embed(description="Help", colour=ctx.message.author.color) 
+                embedsendable = True
             else:
-                sendhelpem = False
-                if type(ctx.message.channel) == discord.PrivateChannel:
-                    embedsendable = True
-                    em = discord.Embed(description="Help", colour=0xFFFFFF)
-                elif ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
-                    em = discord.Embed(description="Help", colour=ctx.message.author.color) 
-                    embedsendable = True
-                else:
-                    embedsendable = False
-                if embedsendable:
-                    em.add_field(name="Normal commands:", value="embeds, quote, clean", inline=True)
-                    em.add_field(name="Helpful/technical commands:", value="info, update, cls, support, kill, restart, print, test", inline=True)
-                    em.add_field(name="Profile commands:", value="game, nick, status", inline=True)
-                    em.add_field(name="Useless commands:", value="blur, undertext, invert, f, memberundertale", inline=True)
-                    em.add_field(name="Advanced mode commands:", value="eval", inline=True)
-                    em.set_footer(text="You can use {}help (command) to get the information of that command.".format(invoker))
-                try:
-                    await bot.edit_message(ctx.message, "​", embed=em)
-                except:
-                    await bot.say("Normal commands: embeds, quote, clean\n"
-                                    "Helpful/technical commands: info, update, cls, support, kill, restart, print, test"
-                                    "Profile commands: game, nick, status"
-                                    "Useless commands: blur, undertext, invert, f"
-                                    "Advanced mode commands: eval"
-                                    "You can use {}help (command) to get the information of that command.".format(invoker))
-        else:
-            await bot.say("Please run the command where you have the send embeds permission.")
+                embedsendable = False
+            if embedsendable:
+                em.add_field(name="Normal commands:", value="embeds, quote, clean", inline=True)
+                em.add_field(name="Helpful/technical commands:", value="info, update, cls, support, kill, restart, print, test", inline=True)
+                em.add_field(name="Profile commands:", value="game, nick, status", inline=True)
+                em.add_field(name="Useless commands:", value="blur, undertext, invert, f, memberundertale", inline=True)
+                em.add_field(name="Advanced mode commands:", value="eval", inline=True)
+                em.set_footer(text="You can use {}help (command) to get the information of that command.".format(invoker))
+                await bot.send_message(ctx.message.channel, embed=em)
+        if helpf == True:
+            content = (helplist(cmds))
+
+            # General
+            if cmdarg == None:
+                pass
+            else:
+                matched = False
+                for cat in (cmds):
+                    for cmd in cat['commands']: # Maybe have a nested try-except KeyError instead of looping through every command
+                        if cmdarg == cmd['name']:
+                            try:
+                                content = '`{}{}` – {}'.format(invoker, cmd['name'], cmd['extrafull'])
+                            except KeyError:
+                                content = '`{}{}` – {}\n{}'.format(invoker, cmd['name'], cmd['short'], cmd['extra'])
+                            matched = True
+                            break
+                    if matched:
+                        break
+
+                if not matched:
+                    content = 'Invalid arguments passed, or the command is not in the help list.'
+            if type(ctx.message.channel) == discord.PrivateChannel:
+                embed = discord.Embed(description=content.format(invoker), colour=0xFFFFFF)
+            elif ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
+                embed = discord.Embed(description=content.format(invoker), colour=ctx.message.author.color)
+            await bot.send_message(ctx.message.channel, embed=embed)
 
 @bot.event
 async def on_message(message):

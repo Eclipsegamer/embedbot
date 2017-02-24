@@ -1,0 +1,132 @@
+{
+	"cmds": [
+		{
+			"cat_name": "General Commands",
+			"cat_slug": "general",
+			"cat_desc": "",
+			"cat_shown": true,
+			"commands": [
+				{
+					"name": "help",
+					"short": "Lists commands and their descriptions.",
+					"extra": "If an argument is given, `{}help` will look up in-depth description of the argument."
+				},
+				{
+					"name": "embeds",
+					"short": "Sends an embed with the message of your choice.",
+					"extra": ""
+				},
+				{
+					"name": "quote",
+					"short": "Sends an embed with someone's message, with their avatar and username.",
+					"extra": ""
+				},
+				{
+					"name": "clean",
+					"short": "Deletes your messages up to a limit. ",
+					"extra": ""
+				},
+				{
+					"name": "info",
+					"short": "Gives you information about the bot",
+					"extra": ""
+				},
+				{
+					"name": "update",
+					"short": "\"Updates\" your version of embedbot. Technically it deletes the bots files and redownloads them from the github. Oops.",
+					"extra": ""
+				},
+				{
+					"name": "cls",
+					"short": "Clears your console's screen.",
+					"extra": ""
+				},
+				{
+					"name": "support",
+					"short": "Makes you join the support server.",
+					"extra": ""
+				},
+				{
+					"name": "kill",
+					"short": "Kill is kind of harsh because it kil- shuts off the bot.",
+					"extra": ""
+				},
+				{
+					"name": "restart",
+					"short": "Restarts the bot.",
+					"extra": ""
+				},
+				{
+					"name": "print",
+					"short": "Prints a message to the console.",
+					"extra": ""
+				},
+				{
+					"name": "test",
+					"short": "Tells you if the bot is active or not.",
+					"extra": ""
+				},
+				{
+					"name": "game",
+					"short": "Changes your playing status.",
+					"extra": "Note: It won't show up for your client, but it _will_ show up for others."
+				},
+				{
+					"name": "nick",
+					"short": "Changes your nickname.",
+					"extra": ""
+				},
+				{
+					"name": "status",
+					"short": "Changes your status.",
+					"extra": "Statuses are: online, idle, dnd and offline."
+				},
+				{
+					"name": "blur",
+					"short": "Blurs an image of your choice.",
+					"extra": "You can upload an image with the command as a caption, or you can pass a link as an argument."
+				},
+				{
+					"name": "undertext",
+					"short": "Generates an Undertale textbox with the message of your choice.",
+					"extra": ""
+				},
+				{
+					"name": "invert",
+					"short": "Inverts an image. Please don't rely on it, as it doesn't always work.",
+					"extra": "You can upload an image with the command as a caption, or you can pass a link as an argument."
+				},
+				{
+					"name": "f",
+					"short": "Pays respects.",
+					"extra": ""
+				},
+				{
+					"name": "eval",
+					"short": "Evaluates a command of your choice.",
+					"extra": "Advanced mode command, as it has the possibility to destroy your computer, or at least send some of your information. Please use carefully."
+				},
+				{
+					"name": "memberundertale",
+					"short": "Sends the amount of users with Undertale related usernames or nicknames in the current server.",
+					"extra": "Why did I make this?"
+				},
+				{
+					"name": "getinvite",
+					"short": "Creates an invite from your current server, or a server you can specify.",
+					"extra": ""
+				},
+				{
+					"name": "changelog",
+					"short": "Shows the changelog for the current version.",
+					"extra": ""
+				},
+				{
+					"name": "**beemovie***",
+					"short": "O-oh, don't use this... It sends the whole bee movie script... It should only be used by Alexia. Or should I say, bee used.",
+					"extra": "Haha funny joke"
+				}
+			]
+		}
+	]
+}
