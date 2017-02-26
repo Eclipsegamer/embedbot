@@ -4,46 +4,41 @@
 # Oops.
 botversion = "1.6"
 changes = "*Edited the help command to use a json file instead of a elif chain."
-print("Importing modules...")
 import subprocess as sp
-print("Imported subprocess...")
 import asyncio
-print("Imported asyncio...")
 import inspect
-print("Imported inspect...")
 import os
-print("Imported os...")
 import datetime
-print("Imported datetime...")
 import platform
-print("Imported platform...")
 import sys
-print("Imported sys...")
 import traceback
-print("Imported traceback...")
 import json
-print("Imported json...")
 import time
-print("Imported time...")
 import threading
-print("Imported threading...")
 import itertools
-print("Imported itertools...")
 import urllib.request
-print("Imported urllib.request...")
 import textwrap
-print("Imported textwrap...")
 import random
-print("Imported random...")
 import pip
-print("Imported pip...")
 from urllib import request
-print("Imported request from urllib...")
 def install(package):
     pip.main(['install', package])
 current_os = platform.system()
 installlist = []
 needinstall = False
+try:
+    from colorama import Fore, Back, Style
+    import colorama
+    colorama.init(autoreset=True)
+    print("Imported colorama...")
+except ImportError:
+    if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
+        pip_os = "pip3"
+    if current_os == "Windows":
+        pip_os = "pip"
+    installlist.append("colorama")
+    print("Please run \"{} install colorama\".".format(pip_os))
+    needinstall = True
 try:
     from PIL import Image
     import PIL.ImageOps
@@ -97,7 +92,6 @@ there = [
 do = "as you wish."
 I("will be watching.")
 
-
 def clear_screen():
     if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
         tmp = sp.call('clear', shell=True)
@@ -111,15 +105,6 @@ if current_os == "Windows":
     tmp = sp.call('cls', shell=True)
     pip_os = "pip"
 
-
-try:
-    import clint
-    from clint.textui import colored
-    clintexists = True
-except ImportError:
-    clintexists = False
-    pass
-
 starttime = datetime.datetime.now()
 
 try:
@@ -130,7 +115,7 @@ except ImportError:
     if clintexists:
         a = "install discord.py"
         print("Discord.py is not installed.")
-        print("Please install it using {}.".format(colored.green('{} {}'.format(pip_os, a))))
+        print("Please install it using {}{} {}.".format(Fore.GREEN, pip_os, a))
         print("Also, you can install the dev versions from here:")
         print("https://github.com/Rapptz/discord.py")
     else:
@@ -218,7 +203,7 @@ def helplist(cats, onlycat=None):
 	for cat in cats:
 		if (onlycat == None and cat['cat_shown']) or onlycat == cat['cat_slug']:
 			if onlycat == None:
-				returnage += '\n\n__`{}:`__ — For command descriptions: **`\help {}`**'.format(cat['cat_name'], cat['cat_slug'])
+				returnage += '\n\n__`{}:`__ - For command descriptions: **`\help {}`**'.format(cat['cat_name'], cat['cat_slug'])
 			else:
 				if cat['cat_desc'] != '':
 					returnage += cat['cat_desc']
@@ -233,7 +218,7 @@ def helplist(cats, onlycat=None):
 					else:
 						returnage += '   `\{}`'.format(cmd['name'])
 				else:
-					returnage += '\n`\{}` – {}'.format(cmd['name'], cmd['short'])
+					returnage += '\n`\{}` - {}'.format(cmd['name'], cmd['short'])
 	return returnage
 
 @bot.event
@@ -261,35 +246,17 @@ async def on_ready():
     print("Embedbot version   : {}".format(botversion))
     print("-----------------------------------------------------------------")
     c = "install clint"
-    if silent == "True" or rminvokermsg == "True" or clintexists:
+    if silent == "True" or rminvokermsg == "True":
         if silent == "True" and rminvokermsg == "True":
-            if clintexists:
-                print(colored.yellow('Silentmode is not implemented yet.'))
-                print(colored.yellow('Autoremove invoker message is not implemented yet.'))
-            else:
-                print('  Silentmode is not implemented yet.')
-                print('  Autoremove invoker message is not implemented yet.')
-                print('  Clint is not installed (use "{} {}" to install clint)'.format(pip_os, c))
+            print(Fore.YELLOW + 'Silentmode is not implemented yet.')
+            print(Fore.YELLOW + 'Autoremove invoker message is not implemented yet.')
         elif silent == "True" and rminvokermsg == "False":
-            if clintexists:
-                print(colored.yellow('Silentmode is not implemented yet.'))
-            else:
-                print('  Silentmode is not implemented yet.')
-                print('  Clint is not installed (use "{} {}" to install clint)'.format(pip_os, c))
+            print(Fore.YELLOW + 'Silentmode is not implemented yet.')
         elif silent == "False" and rminvokermsg == "True":
-            if clintexists:
-                print(colored.yellow('Autoremove invoker message is not fully implemented yet.'))
-            else:
-                print('  Autoremove invoker message is not fully implemented yet.')
-                print('  Clint is not installed (use "{} {}" to install clint)'.format(pip_os, c))
+            print(Fore.YELLOW + 'Autoremove invoker message is not fully implemented yet.')
         else:
             pass
-        print(colored.green('  If you get any errors, please join our support server with \n  the', bold=True),
-              colored.blue('{}support'.format(invoker), bold=True),
-              colored.green('command to complain about how we can\'t code.', bold=True))
-    else:
-        print('   If you get any errors, please join our support server with')
-        print('   the "{}support" command to complain about how we can\'t code.'.format(invoker))
+    print(Fore.LIGHTGREEN_EX + 'If you get any errors, please join our support server with \n  the ' + Fore.LIGHTCYAN_EX + '{}support '.format(invoker) + Fore.LIGHTGREEN_EX + 'command to complain about how we can\'t code.')
     print("-----------------------------------------------------------------")
     bot.remove_command("help")
     bot.remove_command("HelpFormatter")
@@ -330,9 +297,9 @@ async def on_ready():
                     for cmd in cat['commands']: # Maybe have a nested try-except KeyError instead of looping through every command
                         if cmdarg == cmd['name']:
                             try:
-                                content = '`{}{}` – {}'.format(invoker, cmd['name'], cmd['extrafull'])
+                                content = '`{}{}` - {}'.format(invoker, cmd['name'], cmd['extrafull'])
                             except KeyError:
-                                content = '`{}{}` – {}\n{}'.format(invoker, cmd['name'], cmd['short'], cmd['extra'])
+                                content = '`{}{}` - {}\n{}'.format(invoker, cmd['name'], cmd['short'], cmd['extra'])
                             matched = True
                             break
                     if matched:
@@ -604,8 +571,6 @@ async def clean(ctx, number: int, match_pattern: str=None):
         tries_left -= 1
     to_delete.append(ctx.message)
     await slow_deletion(to_delete)
-    await bot.edit_message(r, "`Task executed succesfully.`")
-    await asyncio.sleep(3)
     await bot.delete_message(r)
     
 
