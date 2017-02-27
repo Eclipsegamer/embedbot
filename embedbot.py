@@ -778,6 +778,26 @@ async def f(ctx):
     await bot.edit_message(ctx.message, "`Respects have been paid.`")
     await bot.add_reaction(ctx.message, '\U0001f1eb')
 
+def charreplace(charset, input):
+    # Data Converter
+    regular = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ -=[]\\'/.,<>?:;|+_)(*&^%$#@!\"{}"
+    characterset = charset
+    converter = dict((ord(x[0]), x[1]) for x in zip(regular, characterset))
+    input = input.translate(converter) 
+    # Output Builder
+    result = "" + input + ""
+    # Final Task
+    return result
+
+@bot.command(pass_context=True)
+async def aesthetics(ctx):
+    """wewlad"""
+    try:
+        arg = ctx.message.clean_content.split(" ", 1)[1]
+        await bot.edit_message(ctx.message, charreplace("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ１２３４５６７８９０ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ －＝［］＼＇／．，＜＞？：；｜＋＿）（＊＆＾％＄＃＠！＂｛｝", arg))
+    except:
+        pass
+
 try:
     if token == "None": # For People that use Email and Password.
                         # "None" because json doesn't have None.

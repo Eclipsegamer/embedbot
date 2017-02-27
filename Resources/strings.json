@@ -125,6 +125,11 @@
 					"name": "**beemovie***",
 					"short": "O-oh, don't use this... It sends the whole bee movie script... It should only be used by Alexia. Or should I say, bee used.",
 					"extra": "Haha funny joke"
+				},
+				{
+					"name": "aesthetics",
+					"short": "Makes your text a e s t h e t i c.",
+					"extra": ""
 				}
 			]
 		}
