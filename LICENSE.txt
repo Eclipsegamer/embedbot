@@ -1,0 +1,38 @@
+ESBOT LICENSE
+Version 1.0, 24 February 2017
+
+TERMS AND CONDITIONS
+
+1. Usage
+
+You are free to download, copy, compile and make
+reference to the source code for personal use.
+
+2. Modifications
+
+You are free to make modifications to the source,
+and you are also free to use the source after
+modifying it.
+
+3. Redistribution
+
+You may NOT redistribute and/or republish the
+source, with or without edits made, in part or
+whole, without permission from the authors. If
+you get permission, you may not sell your copy,
+under any circumstances.
+
+4. Permissions
+
+If you intend to use parts of the source in your
+projects, you need permission, as stated in 3.
+
+5. No Warranty
+
+The source code licensed under this is provided
+"as is". The author of this program and/or source
+code is not responsible for any harm done to your
+computer. That is merely the users fault, and
+the user's problem.
+
+END OF TERMS AND CONDITIONS
