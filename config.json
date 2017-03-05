@@ -6,5 +6,6 @@
            "textargs": "True",
            "advancedmode": "False",
            "autoremoveinvokermessage": "False",
-           "silentmode": "False"
+           "silentmode": "False",
+           "loadmode": "0"
 }

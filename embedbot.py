@@ -139,22 +139,6 @@ starttext = [
     "*Crunch* NO DON'T TOUCH THAT!",
     "BetterDiscord more like sweaterdiscord because nobody wants it"
 ]
-print(random.choice(starttext))
-load = itertools.cycle(['.  ', '.. ', '...', '   '])
-sys.stdout.write('Logging in to Discord')
-cursor.hide()
-def loggingin():
-    t = threading.currentThread()
-    while getattr(t, "do_run", True):
-        for i in range(0, 4):
-            sys.stdout.write(load.__next__())
-            sys.stdout.flush()
-            sys.stdout.write('\b\b\b')
-            time.sleep(0.5)
-            if not getattr(t, "do_run", True):
-                break
-thread = threading.Thread(target=loggingin)
-thread.start()
 # Strings loading
 def loadstrings():
     # Totally not copied from [\]
@@ -184,8 +168,33 @@ try:
         rminvokermsg = jsonhandler['autoremoveinvokermessage']
         advancedmode = jsonhandler['advancedmode']
         silent = jsonhandler['silentmode']
+        loadmode = jsonhandler['loadmode']
 except:
     print("There was a problem with your config file. Make sure that everything is up to date.")
+
+print(random.choice(starttext))
+if loadmode == "0":
+    load = itertools.cycle(['.  ', '.. ', '...', '   '])
+    sys.stdout.write('Logging in to Discord')
+else:
+    load = itertools.cycle(['|', '/', '-', '\\'])
+    sys.stdout.write('Logging in to Discord ')
+cursor.hide()
+def loggingin():
+    t = threading.currentThread()
+    while getattr(t, "do_run", True):
+        for i in range(0, 4):
+            sys.stdout.write(load.__next__())
+            sys.stdout.flush()
+            if loadmode == "0":
+                sys.stdout.write('\b\b\b')
+            else:
+                sys.stdout.write('\b')
+            time.sleep(0.5)
+            if not getattr(t, "do_run", True):
+                break
+thread = threading.Thread(target=loggingin)
+thread.start()
 
 bot = commands.Bot(command_prefix=invoker, self_bot=True)
 invite_url = "https://discord.gg/KFYAUyw"
