@@ -34,3 +34,27 @@ Example: embedbot.py Account1.json
 (Hey, sometimes I'm lazy.)
 
 If you like, you can use a token by replacing bot.run(email, password, bot=False) with bot.run("your token", bot=False).
+
+Config layout:
+
+{
+           "token": "None",
+           "email": "example@example.com",
+           "password": "abc123",
+           "invoker": "me!",
+           "textargs": "True",
+           "advancedmode": "False",
+           "autoremoveinvokermessage": "False",
+           "silentmode": "False",
+           "loadmode": "0"
+}
+
+token: If you don't want to use your email and password, or if you use 2 factor identification (2fa or mfa), you may insert your token here.
+email: If you're not using your token, it defaults to this, and your pass.
+password: If you're not using your token, it defaults to this, and your email.
+invoker: Can be anything, sadly. Default is \*.
+textargs: True if you want stuff like {shrug} to be replaced.
+advancedmode: Enabled commands like eval.
+autoremoveinvokermessage: I don't really know, ask HYP3R.
+silentmode: I don't know this, either.
+loadmode: 0 for dots during loading, 1 for a spinning line.
