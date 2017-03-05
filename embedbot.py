@@ -112,17 +112,11 @@ try:
     from discord.ext import commands
     import discord
 except ImportError:
-    if clintexists:
-        a = "install discord.py"
-        print("Discord.py is not installed.")
-        print("Please install it using {}{} {}.".format(Fore.GREEN, pip_os, a))
-        print("Also, you can install the dev versions from here:")
-        print("https://github.com/Rapptz/discord.py")
-    else:
-        print("Discord.py is not installed.")
-        print("Please install it using {} install discord.py.".format(pip_os))
-        print("Also, you can install the dev versions from here:")
-        print("https://github.com/Rapptz/discord.py")
+    a = "install discord.py"
+    print("Discord.py is not installed.")
+    print("Please install it using {}{} {}.".format(Fore.GREEN, pip_os, a))
+    print("Also, you can install the dev versions from here:")
+    print("https://github.com/Rapptz/discord.py")
     print("Note: If you get an error saying pip doesn't exist, try this:")
     print("\"Your python installation path\\Scripts\\pip.exe install discord.py\" (On Windows).")
     print("Also make sure you are running command prompt (or whatever you're using)\nas admin.")
