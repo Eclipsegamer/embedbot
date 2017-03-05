@@ -816,7 +816,7 @@ try:
                 sys.exit()
             else:
                 bot.run(email, password, bot=False)
-        elif len(token) > 60: # Checking Token's Length.
+        elif len(token) > 90: # Checking Token's Length.
             thread.do_run = False
             thread.join()
             clear_screen()
