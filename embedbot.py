@@ -512,6 +512,7 @@ async def kill(ctx):
 
 @bot.command(pass_context=True)
 async def quote(ctx, m: discord.Member, *, asdf):
+    asdf = discord.utils.get(bot.messages, id=asdf).content
     if type(ctx.message.channel) == discord.PrivateChannel:
         em = discord.Embed(description=asdf, colour=0xFFFFFF)
         em.set_author(name=m.display_name, icon_url=m.avatar_url)
