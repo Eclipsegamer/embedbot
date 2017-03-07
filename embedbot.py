@@ -150,7 +150,7 @@ starttext = [
 def loadstrings():
     # Totally not copied from [\]
     # sorry info
-    stringsf = open(r'.\Resources\strings.json', 'r')
+    stringsf = open(r".\Resources\strings.json", 'r')
     stringsfr = stringsf.read()
     strings = json.loads(stringsfr)
     global cmds
