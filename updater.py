@@ -31,7 +31,7 @@ except OSError:
 REPO_URL = "https://www.github.com/Luigimaster1/embedbot.git"
 LOCAL_DIR = "./tempupdate/"
 Repo.clone_from(REPO_URL, LOCAL_DIR)
-def del_rw(name):
+def del_rw(action, name, exc):
     """kiwi catnip pls document this"""
     os.chmod(name, stat.S_IWRITE)
     os.remove(name)
