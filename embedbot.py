@@ -141,7 +141,9 @@ starttext = [
     "Bad code awaits you.",
     "You ready for this?",
     "*Crunch* NO DON'T TOUCH THAT!",
-    "BetterDiscord more like sweaterdiscord because nobody wants it"
+    "BetterDiscord more like sweaterdiscord because nobody wants it",
+    "import antigravity",
+    "from __future__ import braces"
 ]
 # Strings loading
 def loadstrings():
