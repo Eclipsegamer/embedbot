@@ -164,20 +164,20 @@ try:
 except:
     customconfig = "config.json"
 
-try:
-    with open(customconfig) as c:
-        jsonhandler = json.load(c)
-        token = jsonhandler['token']
-        email = jsonhandler['email']
-        password = jsonhandler['password']
-        invoker = jsonhandler['invoker']
-        textargs = jsonhandler['textargs']
-        rminvokermsg = jsonhandler['autoremoveinvokermessage']
-        advancedmode = jsonhandler['advancedmode']
-        silent = jsonhandler['silentmode']
-        loadmode = jsonhandler['loadmode']
-except:
-    print("There was a problem with your config file. Make sure that everything is up to date.")
+# try:
+with open(customconfig) as c:
+    jsonhandler = json.load(c)
+    token = jsonhandler['token']
+    email = jsonhandler['email']
+    password = jsonhandler['password']
+    invoker = jsonhandler['invoker']
+    textargs = jsonhandler['textargs']
+    rminvokermsg = jsonhandler['autoremoveinvokermessage']
+    advancedmode = jsonhandler['advancedmode']
+    silent = jsonhandler['silentmode']
+    loadmode = jsonhandler['loadmode']
+# except:
+#     print("There was a problem with your config file. Make sure that everything is up to date.")
 
 print(random.choice(starttext))
 if loadmode == "0":
