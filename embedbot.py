@@ -1,4 +1,4 @@
-# Embedbot 1.6 made by -Kiwi Catnip ♡#1540, @isy#0669 and @HYP3RD34TH#2104.
+# Embedbot 1.6 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
@@ -372,7 +372,7 @@ async def info(ctx):
     if embedsendable:
         em.add_field(name="Discord.py version:", value="{}.{}.{} {}".format(discord.version_info[0], discord.version_info[1], discord.version_info[2], discord.version_info[3]), inline=True)
         em.add_field(name="Embedbot version:", value=botversion, inline=True)
-        em.add_field(name="Made by:", value="-Kiwi Catnip ♡#1540, isy#0669 and HYP3RD34TH#2104.", inline=True)     
+        em.add_field(name="Made by:", value="-Kiwi Catnip ♡#1540, isy#0669, HYP3RD34TH#2104 and @Nikitaw99#4332.", inline=True)     
         em.add_field(name="According to all known laws of aviation,", value="a bee should not be able to fly.", inline=True)
         em.add_field(name="Github project:", value="https://www.github.com/Luigimaster1/embedbot", inline=True)
     try:
