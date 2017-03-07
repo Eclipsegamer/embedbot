@@ -406,7 +406,7 @@ async def update(ctx):
     import stat
     try:
         os.remove("oldconfig.json")
-    except:
+    except OSError:
         pass
     os.rename("config.json", "oldconfig.json")
     os.remove("embedbot.py") #lol r i p embedbot if this doesn't work r i p my work
