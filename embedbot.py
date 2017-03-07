@@ -20,6 +20,7 @@ import urllib.request
 import textwrap
 import random
 import pip
+import psutil
 from urllib import request
 def install(package):
     pip.main(['install', package])
@@ -133,7 +134,7 @@ starttext = [
     "IT'S THE",
     "Uh oh!",
     "Now look at this net",
-    "Deleting C drive...",
+    "Deleting {} Drive...".format(psutil.disk_partitions()[0][0]),
     "Installing Bonzi Buddy...",
     "Welcome back!",
     "Readying the felines...",
