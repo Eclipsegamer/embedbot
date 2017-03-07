@@ -3,7 +3,7 @@
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
 botversion = "1.6"
-changes = "*Edited the help command to use a json file instead of a elif chain."
+changes = "*some stupid fix for \"Undertext\"."
 import subprocess as sp
 import asyncio
 import inspect
@@ -722,18 +722,26 @@ async def blur(ctx):
 		
 @bot.command(pass_context=True)
 async def undertext(ctx, *, inputtext):
-    img = Image.open(".\Resources\Images\Input\Textbox.png")
+    def _path(): # Some temporary path fix (Since the Current method wont work on OS's other than windows)
+        _os = platform.system()
+        if _os == "Linux" or _os == "Darwin":
+            return "/", " "
+        if _os == "Windows":
+            return "\\", ".\\"
+    p1 = _path()[0]
+    p2 = _path()[1]
+    img = Image.open("%Resources$Images$Input$Textbox.png".replace("%", p2).replace("$", p1))
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype("DTM-Mono.otf", 130)
+    font = ImageFont.truetype("%Resources$Fonts$DTM-Mono.otf".replace("%", p2).replace("$", p1), 130)
     margin = 170
     offset = 100
     textline = textwrap.wrap(inputtext, width=33)
     for line in textline:
         draw.text((margin, offset), line,(255,255,255),font=font)
         offset += 200
-    img.save(".\Resources\Images\Output\Textbox.png")
-    await bot.send_file(ctx.message.channel, ".\Resources\Images\Output\Textbox.png")
-    os.remove(".\Resources\Images\Output\Textbox.png")
+    img.save("%Resources$Images$Output$Textbox.png".replace("%", p2).replace("$", p1))
+    await bot.send_file(ctx.message.channel, "%Resources$Images$Output$Textbox.png".replace("%", p2).replace("$", p1))
+    os.remove("%Resources$Images$Output$Textbox.png".replace("%", p2).replace("$", p1))
 
 @bot.group(pass_context=True)
 async def invert(ctx):
