@@ -3,7 +3,7 @@
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
 botversion = "1.6"
-changes = "*some stupid fix for \"Undertext\"."
+changes = "optimizing code so that pylint stops shouting at us"
 import subprocess as sp
 import asyncio
 import inspect
@@ -69,8 +69,12 @@ instimporterror = False
 if needinstall:
     print("Attempting to install them.")
     for pipinstall in installlist:
-            install(pipinstall)
-    print("If there were any errors, please run embedbot with admininstrator privileges, or please use pip to install them.\nIf there was no errors, you can now run embedbot normally.")
+        install(pipinstall)
+    x = "If there were any errors, please run embedbot with admininstrator privileges"
+    y = ", or please use pip to install them."
+    z = "\nIf there was no errors, you can now run embedbot normally."
+    print(x + y + z)
+    del x, y, z
     time.sleep(3)
     sys.exit()
 print("Done.")
@@ -143,11 +147,11 @@ starttext = [
 def loadstrings():
     # Totally not copied from [\]
     # sorry info
-	stringsf = open('.\Resources\strings.json', 'r')
-	stringsfr = stringsf.read()
-	strings = json.loads(stringsfr)
-	global cmds
-	cmds = strings['cmds']
+    stringsf = open(r'.\Resources\strings.json', 'r')
+    stringsfr = stringsf.read()
+    strings = json.loads(stringsfr)
+    global cmds
+    cmds = strings['cmds']
 
 loadstrings()
 
@@ -202,27 +206,30 @@ invite_url = "https://discord.gg/KFYAUyw"
 
 
 def helplist(cats, onlycat=None):
-	returnage = ''
-	for cat in cats:
-		if (onlycat == None and cat['cat_shown']) or onlycat == cat['cat_slug']:
-			if onlycat == None:
-				returnage += '\n\n__`{}:`__ - For command descriptions: **`\help {}`**'.format(cat['cat_name'], cat['cat_slug'])
-			else:
-				if cat['cat_desc'] != '':
-					returnage += cat['cat_desc']
-				returnage += '\n__`{}:`__'.format(cat['cat_name'])
+    returnage = ''
+    for cat in cats:
+        if (onlycat == None and cat['cat_shown']) or onlycat == cat['cat_slug']:
+            if onlycat == None:
+                x = '\n\n__`{}:`__ - For command descriptions: **`\\help {}`**'
+                y = x.format(cat['cat_name'], cat['cat_slug'])
+                returnage += y
+                del x, y
+            else:
+                if cat['cat_desc'] != '':
+                    returnage += cat['cat_desc']
+                returnage += '\n__`{}:`__'.format(cat['cat_name'])
 
-			first = True
-			for cmd in cat['commands']:
-				if onlycat == None:
-					if first:
-						returnage += '\n`\{}`'.format(cmd['name'])
-						first = False
-					else:
-						returnage += '   `\{}`'.format(cmd['name'])
-				else:
-					returnage += '\n`\{}` - {}'.format(cmd['name'], cmd['short'])
-	return returnage
+            first = True
+            for cmd in cat['commands']:
+                if onlycat == None:
+                    if first:
+                        returnage += '\n`\\{}`'.format(cmd['name'])
+                        first = False
+                    else:
+                        returnage += '   `\\{}`'.format(cmd['name'])
+                else:
+                    returnage += '\n`\\{}` - {}'.format(cmd['name'], cmd['short'])
+    return returnage
 
 @bot.event
 async def on_ready():
@@ -241,7 +248,10 @@ async def on_ready():
     print("   Made by -Kiwi Catnip \\u2661#1540, isy#0669 and HYP3RD34TH#2104.")
     print("-----------------------------------------------------------------")
     print("Login time         : {} milliseconds".format(login_time))
-    print("Logged in as       : {} ({})".format(str(bot.user).encode("ascii", "backslashreplace").decode(), bot.user.id))
+    x = "Logged in as       : {} ({})"
+    y = x.format(str(bot.user).encode("ascii", "backslashreplace").decode(), bot.user.id)
+    print(y)
+    del x, y
     print("Connected to       : {} servers and {} channels".format(servers, channels))
     print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
     print("Python version     : {}.{}.{}".format(*os.sys.version_info[:3]))
@@ -259,7 +269,11 @@ async def on_ready():
             print(Fore.YELLOW + 'Autoremove invoker message is not fully implemented yet.')
         else:
             pass
-    print(Fore.LIGHTGREEN_EX + 'If you get any errors, please join our support server with \n  the ' + Fore.LIGHTCYAN_EX + '{}support '.format(invoker) + Fore.LIGHTGREEN_EX + 'command to complain about how we can\'t code.')
+    x = Fore.LIGHTGREEN_EX + 'If you get any errors, please join our support server with \n  the '
+    y = Fore.LIGHTCYAN_EX + '{}support '.format(invoker) + Fore.LIGHTGREEN_EX
+    z = 'command to complain about how we can\'t code.'
+    print(x+y+z)
+    del x, y, z
     print("-----------------------------------------------------------------")
     bot.remove_command("help")
     bot.remove_command("HelpFormatter")
@@ -276,17 +290,21 @@ async def on_ready():
                 embedsendable = True
                 em = discord.Embed(description="Help", colour=0xFFFFFF)
             elif ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
-                em = discord.Embed(description="Help", colour=ctx.message.author.color) 
+                em = discord.Embed(description="Help", colour=ctx.message.author.color)
                 embedsendable = True
             else:
                 embedsendable = False
             if embedsendable:
                 em.add_field(name="Normal commands:", value="embeds, quote, clean", inline=True)
-                em.add_field(name="Helpful/technical commands:", value="info, update, cls, support, kill, restart, print, test", inline=True)
+                x = "info, update, cls, support, kill, restart, print, test"
+                em.add_field(name="Helpful/technical commands:", value=x, inline=True)
                 em.add_field(name="Profile commands:", value="game, nick, status", inline=True)
-                em.add_field(name="Useless commands:", value="blur, undertext, invert, f, memberundertale", inline=True)
+                x = "blur, undertext, invert, f, memberundertale"
+                em.add_field(name="Useless commands:", value=x, inline=True)
                 em.add_field(name="Advanced mode commands:", value="eval", inline=True)
-                em.set_footer(text="You can use {}help (command) to get the information of that command.".format(invoker))
+                x = "You can use {}help (command) to get the information of that command."
+                em.set_footer(text=x.format(invoker))
+                del x
                 await bot.send_message(ctx.message.channel, embed=em)
         if helpf == True:
             content = (helplist(cmds))
@@ -296,13 +314,21 @@ async def on_ready():
                 pass
             else:
                 matched = False
-                for cat in (cmds):
-                    for cmd in cat['commands']: # Maybe have a nested try-except KeyError instead of looping through every command
+                for cat in cmds:
+                    # Maybe have a nested try-except KeyError
+                    # instead of looping through every command
+                    for cmd in cat['commands']:
                         if cmdarg == cmd['name']:
                             try:
-                                content = '`{}{}` - {}'.format(invoker, cmd['name'], cmd['extrafull'])
+                                x = '`{}{}` - {}'
+                                y = x.format(invoker, cmd['name'], cmd['extrafull'])
+                                content = y
+                                del x, y
                             except KeyError:
-                                content = '`{}{}` - {}\n{}'.format(invoker, cmd['name'], cmd['short'], cmd['extra'])
+                                x = '`{}{}` - {}\n{}'
+                                y = x.format(invoker, cmd['name'], cmd['short'], cmd['extra'])
+                                content = y
+                                del x, y
                             matched = True
                             break
                     if matched:
@@ -313,18 +339,26 @@ async def on_ready():
             if type(ctx.message.channel) == discord.PrivateChannel:
                 embed = discord.Embed(description=content.format(invoker), colour=0xFFFFFF)
             elif ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
-                embed = discord.Embed(description=content.format(invoker), colour=ctx.message.author.color)
+                x = ctx.message.author.color
+                embed = discord.Embed(description=content.format(invoker), colour=x)
+                del x
             await bot.send_message(ctx.message.channel, embed=embed)
 
 @bot.event
 async def on_message(message):
     if textargs == "True":
         if message.author == bot.user:
-            messagereplace = message.content.replace("{hug}","\\\\(^.^\\\\)").replace("{shrug}","¯\\_(ツ)_/¯").replace("{lenny}","( ͡° ͜ʖ ͡°)").replace("{disapprove}","ಠ\_ಠ").replace("{tableflip}","(╯°□°）╯︵ ┻━┻").replace("{unflip}","┬─┬﻿ ノ( ゜-゜ノ)").replace("{unflip2}","​┬─┬ノ( º ⁓ ºノ)").replace("{unflip3}","┬─┬ノ( º _ ºノ)").replace("{cute}","(◕‿◕✿)").replace("{zwsp}","​").replace("{rtl}","\u202e") # This long ass line makes me want to kms ~ Hyp3r
+            x = message.content.replace("{hug}","\\\\(^.^\\\\)").replace("{shrug}","¯\\_(ツ)_/¯")
+            y = x.replace("{lenny}","( ͡° ͜ʖ ͡°)").replace("{disapprove}","ಠ\\_ಠ")
+            z = y.replace("{tableflip}","(╯°□°）╯︵ ┻━┻").replace("{unflip}","┬─┬﻿ ノ( ゜-゜ノ)")
+            x = z.replace("{unflip2}","​┬─┬ノ( º ⁓ ºノ)").replace("{unflip3}","┬─┬ノ( º _ ºノ)")
+            y = x.replace("{cute}","(◕‿◕✿)").replace("{zwsp}","​").replace("{rtl}","\u202e")
+            messagereplace = y
+            del x, y, z
             if not message.content == messagereplace:
                 await bot.edit_message(message, messagereplace)
     await bot.process_commands(message)
-	
+    
 @bot.command(pass_context=True)
 async def info(ctx):
     if type(ctx.message.channel) == discord.PrivateChannel:
@@ -338,7 +372,7 @@ async def info(ctx):
     if embedsendable:
         em.add_field(name="Discord.py version:", value="{}.{}.{} {}".format(discord.version_info[0], discord.version_info[1], discord.version_info[2], discord.version_info[3]), inline=True)
         em.add_field(name="Embedbot version:", value=botversion, inline=True)
-        em.add_field(name="Made by:", value="-Kiwi Catnip ♡#1540, isy#0669 and HYP3RD34TH#2104.", inline=True)	 
+        em.add_field(name="Made by:", value="-Kiwi Catnip ♡#1540, isy#0669 and HYP3RD34TH#2104.", inline=True)     
         em.add_field(name="According to all known laws of aviation,", value="a bee should not be able to fly.", inline=True)
         em.add_field(name="Github project:", value="https://www.github.com/Luigimaster1/embedbot", inline=True)
     try:
@@ -489,21 +523,21 @@ async def nick(ctx):
         await bot.edit_message(ctx.message, "Your nickname on this server has been reset.")
         await asyncio.sleep(3)
         await bot.delete_message(ctx.message)
-	
+    
 @bot.command(pass_context=True, name="print")
 async def _print(ctx, asdf):
     print(asdf.encode("ascii", "backslashreplace").decode())
     await bot.edit_message(ctx.message, "`Task Executed..`")
     await asyncio.sleep(3)
     await bot.delete_message(ctx.message)
-	
+    
 @bot.command(pass_context=True)
 async def test(ctx):
     await bot.edit_message(ctx.message, "`The selfbot is active.`")
     await asyncio.sleep(3)
     await bot.delete_message(ctx.message)
 
-	
+    
 @bot.command(pass_context=True)
 async def kill(ctx):
     await bot.edit_message(ctx.message, "`Killed.`")
@@ -627,10 +661,10 @@ async def _eval(ctx, *, code: str):
         await asyncio.sleep(3)
         await bot.delete_message(r)
 
-		
-		
-		
-		
+        
+        
+        
+        
 @bot.command(pass_context=True)
 async def memberundertale(ctx):
     haswith = ['Frisk', 'Flowey', 'Toriel', 'Papyrus', 'Sans', 'Undyne', 'Mettaton', 'Alphys', 'ASGORE', 'Asriel', 'Chara', 'Gaster', 'Temmie', 'Grillby']
@@ -643,7 +677,7 @@ async def memberundertale(ctx):
 
     await bot.edit_message(ctx.message, "{} out of {} member(s) of this server have undertale related nicknames or usernames.".format(len(people), len(ctx.message.server.members)))
 
-	
+    
 @bot.command(pass_context=True)
 async def getinvite(ctx, *, invitearg = None):
     if invitearg: 
@@ -717,7 +751,7 @@ async def blur(ctx):
         inverted_image.save('result.png')
         await bot.send_file(ctx.message.channel, "result.png")
         os.remove("result.png")
-		
+        
 @bot.command(pass_context=True)
 async def undertext(ctx, *, inputtext):
     def _path(): # Some temporary path fix (Since the Current method wont work on OS's other than windows)
