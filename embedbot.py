@@ -193,7 +193,6 @@ except:
         urllib.request.urlretrieve(url, filename)
         print("Config file fetched! Trying again...")
         customconfig = filename
-    finally:
         del url, filename
 
 try:
