@@ -3,7 +3,7 @@
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
 botversion = "1.6" # displayed in the info command
-changes = "added comments so that you door knobs understand the code" #displayed there, too
+changes = "improved the config loading" #displayed there, too
 # tons of imports
 import subprocess as sp
 import asyncio # you need this for discord.py
@@ -74,11 +74,12 @@ except ImportError:
     installlist.append("Cursor")
     print("Please run \"{} install Cursor\".".format(pip_os))
     needinstall = True
+# And here's where the installing begins.
 instimporterror = False
 if needinstall:
     print("Attempting to install them.")
-    for pipinstall in installlist:
-        install(pipinstall)
+    for module in installlist:
+        install(module)
     x = "If there were any errors, please run embedbot with admininstrator privileges"
     y = ", or please use pip to install them."
     z = "\nIf there was no errors, you can now run embedbot normally."
@@ -116,6 +117,7 @@ def clear_screen():
     if current_os == "Windows":
         tmp = sp.call('cls', shell=True)
 
+# some important shit so that pip works
 if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
     tmp = sp.call('clear', shell=True)
     pip_os = "pip3"
@@ -129,7 +131,7 @@ try:
     assert sys.version_info >= (3, 5) # bot incompatible with 3.4 and below
     from discord.ext import commands # ew, discord ext ~Nikitaw99
     import discord # guess what this is for
-except ImportError:
+except ImportError: # if discord.py aint installed
     a = "install discord.py"
     print("Discord.py is not installed.")
     print("Please install it using {}{} {}.".format(Fore.GREEN, pip_os, a))
@@ -139,7 +141,7 @@ except ImportError:
     print("\"Your python installation path\\Scripts\\pip.exe install discord.py\" (On Windows).")
     print("Also make sure you are running command prompt (or whatever you're using)\nas admin.")
     sys.exit()
-except AssertionError:
+except AssertionError: # bot incompatible with 3.4 and below
     print("Embedbot needs Python 3.5 or superior.")
     sys.exit()
 starttext = [
@@ -176,7 +178,20 @@ loadstrings()
 try:
     customconfig = sys.argv[1] # loads custom config
 except:
-    customconfig = "config.json" # config doesnt exist? then the bot will use default one.
+    try:
+        customconfig = "config.json" # config doesnt exist? then the bot will use default one.
+    except OSError:
+        print("Uh oh. The default config seems to be missing.")
+        print("Attempting to fetch config from github...")
+        # now let's download that shit
+        import urllib.request
+        url = "https://github.com/Luigimaster1/embedbot/blob/master/config.json"
+        filename = "config.json"
+        urllib.request.urlretrieve(url, filename)
+        print("Config file fetched! Trying again...")
+        customconfig = filename
+    finally:
+        del url, filename
 
 try:
     with open(customconfig) as c:
