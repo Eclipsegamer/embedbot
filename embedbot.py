@@ -200,10 +200,10 @@ except json.JSONDecodeError:
 print(random.choice(starttext))
 if loadmode == "0":
     load = itertools.cycle(['.  ', '.. ', '...', '   '])
-    sys.stdout.write('Logging in to Discord')
 else:
     load = itertools.cycle(['|', '/', '-', '\\'])
-    sys.stdout.write('Logging in to Discord ')
+
+sys.stdout.write('Logging in to Discord ')
 cursor.hide()
 def loggingin():
     t = threading.currentThread()
