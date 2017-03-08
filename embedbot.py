@@ -281,17 +281,18 @@ async def on_ready():
     channels = len([c for c in bot.get_all_channels()])
     login_time = datetime.datetime.now() - starttime
     login_time = login_time.seconds + login_time.microseconds/1E6
-    print("-----------------------------------------------------------------")
+    print("=================================================================")
     print("                 -Embedbot - Discord Selfbot-")
-    print("   Made by -Kiwi Catnip \\u2661#1540, isy#0669 and HYP3RD34TH#2104.")
-    print("-----------------------------------------------------------------")
+    print("   By -Kiwi Catnip \\u2661#1540, isy#0669, HYP3RD34TH#2104.")
+    print(                       and Nikitaw99#4332")
+    print("=================================================================")
     print("Login time         : {} milliseconds".format(login_time))
     x = "Logged in as       : {} ({})"
     y = x.format(str(bot.user).encode("ascii", "backslashreplace").decode(), bot.user.id)
     print(y)
     del x, y
     print("Connected to       : {} servers and {} channels".format(servers, channels))
-    print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
+    print("-----------------------------------------------------------------")
     print("Python version     : {}.{}.{}".format(*os.sys.version_info[:3]))
     print("Discord.py version : {}".format(discord.__version__))
     print("Embedbot version   : {}".format(botversion))
@@ -301,10 +302,13 @@ async def on_ready():
         if silent == "True" and rminvokermsg == "True":
             print(Fore.YELLOW + 'Silentmode is not implemented yet.')
             print(Fore.YELLOW + 'Autoremove invoker message is not implemented yet.')
+            print("-----------------------------------------------------------------")
         elif silent == "True" and rminvokermsg == "False":
             print(Fore.YELLOW + 'Silentmode is not implemented yet.')
+            print("-----------------------------------------------------------------")
         elif silent == "False" and rminvokermsg == "True":
             print(Fore.YELLOW + 'Autoremove invoker message is not fully implemented yet.')
+            print("-----------------------------------------------------------------")
         else:
             pass
     x = Fore.LIGHTGREEN_EX + 'If you get any errors, please join our support server with \n  the '
@@ -312,7 +316,7 @@ async def on_ready():
     z = 'command to complain about how we can\'t code.'
     print(x+y+z)
     del x, y, z
-    print("-----------------------------------------------------------------")
+    print("=================================================================")
     bot.remove_command("help")
     bot.remove_command("HelpFormatter")
     @bot.group(pass_context=True)
@@ -794,7 +798,10 @@ async def repl(ctx):
                                                                             fmt)
                         await bot.edit_message(response, fmt)
                 elif fmt is None:
-                    await bot.add_reaction(response, '\u2705')
+                    try:
+                        await bot.add_reaction(response, '\u2705')
+                    except:
+                        pass
             except discord.Forbidden:
                 pass
             except discord.HTTPException as e:
