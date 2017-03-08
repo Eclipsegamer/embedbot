@@ -104,9 +104,13 @@ there = [
 ]
 do = "as you wish."
 I("will be watching.")
+
+# ===== more bad code starts here =====
+
 del I
 
 def clear_screen():
+    """Clear stdout."""
     if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
         tmp = sp.call('clear', shell=True)
     if current_os == "Windows":
@@ -119,12 +123,12 @@ if current_os == "Windows":
     tmp = sp.call('cls', shell=True)
     pip_os = "pip"
 
-starttime = datetime.datetime.now()
+starttime = datetime.datetime.now() # the current fucking date + time
 
 try:
-    assert sys.version_info >= (3, 5)
-    from discord.ext import commands
-    import discord
+    assert sys.version_info >= (3, 5) # bot incompatible with 3.4 and below
+    from discord.ext import commands # ew, discord ext ~Nikitaw99
+    import discord # guess what this is for
 except ImportError:
     a = "install discord.py"
     print("Discord.py is not installed.")
@@ -153,9 +157,10 @@ starttext = [
     "*Crunch* NO DON'T TOUCH THAT!",
     "BetterDiscord more like sweaterdiscord because nobody wants it",
     "import antigravity",
-    "from __future__ import braces"
+    "from __future__ import braces" # all the loading messages
 ]
 # Strings loading
+# question: what fucking strings tho ~Nikitaw99
 def loadstrings():
     # Totally not copied from [\]
     # sorry info
@@ -169,22 +174,22 @@ loadstrings()
 
 # Config loading
 try:
-    customconfig = sys.argv[1]
+    customconfig = sys.argv[1] # loads custom config
 except:
-    customconfig = "config.json"
+    customconfig = "config.json" # config doesnt exist? then the bot will use default one.
 
 try:
     with open(customconfig) as c:
         jsonhandler = json.load(c)
-        token = jsonhandler['token']
-        email = jsonhandler['email']
-        password = jsonhandler['password']
-        invoker = jsonhandler['invoker']
+        token = jsonhandler['token'] # token
+        email = jsonhandler['email'] # email
+        password = jsonhandler['password'] # password
+        invoker = jsonhandler['invoker'] # invoker, * by default
         textargs = jsonhandler['textargs']
         rminvokermsg = jsonhandler['autoremoveinvokermessage']
-        advancedmode = jsonhandler['advancedmode']
+        advancedmode = jsonhandler['advancedmode'] # enables eval
         silent = jsonhandler['silentmode']
-        loadmode = jsonhandler['loadmode']
+        loadmode = jsonhandler['loadmode'] # 0 is dotdotdot, 1 is spinny-line
 except json.JSONDecodeError:
     x = "There was a problem with your config file. Make sure that everything is up to date."
     y = "\nIf it still doesn't work, try deleting the config file and creating it again. "
