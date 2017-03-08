@@ -2,24 +2,25 @@
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.6"
-changes = "optimizing code so that pylint stops shouting at us"
+botversion = "1.6" # displayed in the info command
+changes = "added comments so that you door knobs understand the code" #displayed there, too
+# tons of imports
 import subprocess as sp
-import asyncio
+import asyncio # you need this for discord.py
 import inspect
-import os
-import datetime
-import platform
-import sys
+import os # essential here for interacting with the OS
+import datetime # used for telling the time and date, i guess
+import platform # used for telling what OS you are using (i guess)
+import sys # again, essential python stuff for OS and internal python shit
 import traceback
-import json
-import time
+import json # for teh config
+import time # like datetime, for telling time
 import threading
-import itertools
+import itertools # probably iterator shit? was used in loading screen (spinny line/dot dot dot)
 import urllib.request
-import textwrap
-import random
-import pip
+import textwrap # for wrapping the bee movie script
+import random # mostly for *shuffle, which doesnt work anyways
+import pip # for installing packages
 import psutil
 from urllib import request
 def install(package):
