@@ -24,10 +24,13 @@ import pip # for installing packages
 import psutil
 from urllib import request
 def install(package):
+    """Install a package using pip"""
     pip.main(['install', package])
 current_os = platform.system()
-installlist = []
+installlist = [] # list of things to install (i guess)
 needinstall = False
+# Colorama
+# guessing from the name, it's used for coloring terminal text
 try:
     from colorama import Fore, Back, Style
     import colorama
@@ -41,6 +44,8 @@ except ImportError:
     installlist.append("colorama")
     print("Please run \"{} install colorama\".".format(pip_os))
     needinstall = True
+# PIL
+# image manipulation
 try:
     from PIL import Image
     import PIL.ImageOps
@@ -56,6 +61,8 @@ except ImportError:
     installlist.append("pillow")
     print("Please run \"{} install pillow\".".format(pip_os))
     needinstall = True
+# cursor
+# ...i dont even know
 try:
     import cursor
     print("Imported cursor...")
@@ -97,6 +104,7 @@ there = [
 ]
 do = "as you wish."
 I("will be watching.")
+del I
 
 def clear_screen():
     if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
