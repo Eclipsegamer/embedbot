@@ -8,6 +8,8 @@ changes = "improved the config loading" #displayed there, too
 import subprocess as sp
 import asyncio # you need this for discord.py
 import inspect
+import io
+from contextlib import redirect_stdout
 import os # essential here for interacting with the OS
 import datetime # used for telling the time and date, i guess
 import platform # used for telling what OS you are using (i guess)
@@ -107,6 +109,7 @@ do = "as you wish."
 I("will be watching.")
 
 # ===== more bad code starts here =====
+sessions = set()
 
 del I
 
@@ -697,7 +700,112 @@ async def _eval(ctx, *, code: str):
         await asyncio.sleep(3)
         await bot.delete_message(r)
 
-        
+@bot.command(pass_context=True, name='repl')
+async def repl(ctx):
+    if advancedmode == "True":
+        msg = ctx.message
+        variables = {
+            'ctx': ctx,
+            'bot': bot,
+            'message': msg,
+            'server': msg.server,
+            'channel': msg.channel,
+            'author': msg.author,
+            '_': None,
+        }
+
+        def cleanup_code(content):
+            """Automatically removes code blocks from the code."""
+            # remove ```py\n```
+            if content.startswith('```') and content.endswith('```'):
+                return '\n'.join(content.split('\n')[1:-1])
+
+            # remove `foo`
+            return content.strip('` \n')
+
+        def get_syntax_error(e):
+            if e.text is None:
+                return '```py\n{0.__class__.__name__}: {0}\n```'.format(e)
+            return '```py\n{0.text}{1:>{0.offset}}\n{2}: {0}```'.format(e, '^', type(e).__name__)
+        if msg.channel.id in sessions:
+            await bot.edit_message(msg,
+                                   'Already running a REPL session in this channel. Exit it with `quit`.')
+            return
+
+        sessions.add(msg.channel.id)
+        await bot.edit_message(msg,
+                               'Enter code to execute or evaluate. `exit()` or `quit` to exit.')
+        while True:
+            response = await bot.wait_for_message(author=msg.author, channel=msg.channel,
+                                                  check=lambda m: m.content.startswith('`'))
+
+            cleaned = cleanup_code(response.content)
+
+            if cleaned in ('quit', 'exit', 'exit()'):
+                await bot.say('Exiting.')
+                sessions.remove(msg.channel.id)
+                return
+
+            executor = exec
+            if cleaned.count('\n') == 0:
+                # single statement, potentially 'eval'
+                try:
+                    code = compile(cleaned, '<repl session>', 'eval')
+                except SyntaxError:
+                    pass
+                else:
+                    executor = eval
+
+            if executor is exec:
+                try:
+                    code = compile(cleaned, '<repl session>', 'exec')
+                except SyntaxError as e:
+                    aaa = "**input:**```py\n{}```**output:**{}".format(cleaned,
+                                                                       get_syntax_error(e))
+                    await bot.edit_message(response, aaa)
+                    continue
+
+            variables['message'] = response
+
+            fmt = None
+            stdout = io.StringIO()
+
+            try:
+                with redirect_stdout(stdout):
+                    result = executor(code, variables)
+                    if inspect.isawaitable(result):
+                        result = await result
+            except Exception as e:
+                value = stdout.getvalue()
+                fmt = '```py\n{}{}\n```'.format(value, traceback.format_exc())
+            else:
+                value = stdout.getvalue()
+                if result is not None:
+                    fmt = '```py\n{}{}\n```'.format(value, result)
+                    variables['_'] = result
+                elif value:
+                    fmt = '```py\n{}\n```'.format(value)
+
+            try:
+                if fmt is not None:
+                    if len(fmt) > 2000:
+                        await bot.edit_message(response, 'Content too big to be printed.')
+                    else:
+                        fmt = "**input:**```py\n{}```**output:**{}".format(cleaned,
+                                                                            fmt)
+                        await bot.edit_message(response, fmt)
+                elif fmt is None:
+                    await bot.add_reaction(response, '\u2705')
+            except discord.Forbidden:
+                pass
+            except discord.HTTPException as e:
+                uwotm8 = "**input:**```py\n{}```**output:**```py\nUnexpected error: {}```".format(cleaned,
+                                                                                                    e)
+                await bot.edit_message(response, uwotm8)       
+    else:
+        r = await bot.edit_message(msg, "This command is an `advanced mode` command.")
+        await asyncio.sleep(3)
+        await bot.delete_message(r)        
         
         
         
