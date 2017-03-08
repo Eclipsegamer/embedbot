@@ -1,60 +1,53 @@
-# embedbot
-A selfbot for Discord.
-You need discord.py to run this.
-https://github.com/Rapptz/discord.py
+# **Embedbot**
+### A selfbot for [Discord][Discord] built with [Python][Python].
+###### By  -Kiwi Catnip ♡#1540, HYP3RD34TH#2104 / reticentNarcotic#2104 and @Nikitaw99#4332.
+------
+## Features:
 
-Ask any questions here: discord.gg/KFYAUyw
 
-__Features__
+#### Custom embeds!
+![Custom embeds](https://camo.githubusercontent.com/7511b389bc7cc45391054a50f2c42721d996a90c/68747470733a2f2f66696c65732e636174626f782e6d6f652f3664316e70702e676966)
 
-Custom embeds!
+#### Text triggers!
 
-![Example of embeds](https://files.catbox.moe/6d1npp.gif)
+![Text Triggers](https://camo.githubusercontent.com/11decc2ec9a8716b19d55d91593d49e166e35e83/68747470733a2f2f66696c65732e636174626f782e6d6f652f766e7669717a2e676966)
+#### And more!
 
-Text triggers!
+> **Supports / Special Modes:**
+> - Multiple config files.
+>  - For more accounts.
+> - Logging in with token and/or email and password.
+> - Silentmode.
+>  - This will disable the bot's output messages to the text channel.
+> - Auto-Remove Invoker Message.
+>  - Deletes the command invoking message after some time (Custom time is supported)
+> - Advancedmode
+>  - Enables the developer version of the bot to use the evaluate and REPL commands.
 
-![Example of text triggers](https://files.catbox.moe/vnviqz.gif)
+-----
 
-__Usage__
+> **Compatible with:**
+> - **Windows.** (Vista/7/8/10)
+> - **Linux.** (Any distro that supports Python 3.5 and above.)
+> - **OSX.** (Not fully supported, but will work fine for most features.)
+>   - if there are problems with this platform, please report it in the issues section or on our [Discord server][Discord Server].
 
-Open up config.json with any text editor.
+----
 
-Change the email and password to... your email and password.
+> **Requirements:**
+> - **A Discord account.** (Or someone else's.)
+> - **Python 3.5 or later.** ([Get Python here][Python])
+> - **And some extra Python modules.**
+>  - The bot will try to install these on the first run if those are not installed. (You will need to run the bot with Administrator perms.)
+>  - If the bot fails installing these if will tell you how to install them or you could install them by running:
+>> On Windows:
+>> ```pip install -r requirements.txt```
+>> On Linux or OSX:
+>> ```pip3 install -r requirements.txt```
 
-Change the invoker if you like.
+----
 
-If you have more than one account, the bot supports config arguments.
-
-If your config is named "Account1.json", run the file in your shell, with the argument "Account1.json".
-
-Example: embedbot.py Account1.json
-
-(This also help a lot with testing.)
-
-(Hey, sometimes I'm lazy.)
-
-If you like, you can use a token by replacing bot.run(email, password, bot=False) with bot.run("your token", bot=False).
-
-Config layout:
-
-{
-           "token": "None",
-           "email": "example@example.com",
-           "password": "abc123",
-           "invoker": "me!",
-           "textargs": "True",
-           "advancedmode": "False",
-           "autoremoveinvokermessage": "False",
-           "silentmode": "False",
-           "loadmode": "0"
-}
-
-token: If you don't want to use your email and password, or if you use 2 factor identification (2fa or mfa), you may insert your token here.
-email: If you're not using your token, it defaults to this, and your pass.
-password: If you're not using your token, it defaults to this, and your email.
-invoker: Can be anything, sadly. Default is \*.
-textargs: True if you want stuff like {shrug} to be replaced.
-advancedmode: Enabled commands like eval.
-autoremoveinvokermessage: I don't really know, ask HYP3R.
-silentmode: I don't know this, either.
-loadmode: 0 for dots during loading, 1 for a spinning line.
+[Python]: https://www.python.org/ 
+[Discord]: https://discordapp.com/
+[Discord.py]: https://github.com/Rapptz/discord.py
+[Discord Server]: https://discordapp.com/invite/KFYAUyw
