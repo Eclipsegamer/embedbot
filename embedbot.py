@@ -284,7 +284,7 @@ async def on_ready():
     print("=================================================================")
     print("                 -Embedbot - Discord Selfbot-")
     print("   By -Kiwi Catnip \\u2661#1540, isy#0669, HYP3RD34TH#2104.")
-    print(                       and Nikitaw99#4332")
+    print("                       and Nikitaw99#4332")
     print("=================================================================")
     print("Login time         : {} milliseconds".format(login_time))
     x = "Logged in as       : {} ({})"
