@@ -722,7 +722,7 @@ async def changelog(ctx):
 async def _beemovie(ctx):
     #If you use this, rest in... you're dumb if you use this.
     if ctx.message.author.id == "155651120344203265":
-        with open('.\Resources\beemovie.txt', 'r+') as beem:
+        with open(r".\Resources\beemovie.txt", 'r') as beem:
             beemoviet = beem.read()
             textline = textwrap.wrap(beemoviet, width=2000)
             for line in textline:
