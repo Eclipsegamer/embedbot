@@ -1,9 +1,9 @@
-# Embedbot 1.6 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
+# Embedbot 1.7 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.6" # displayed in the info command
-changes = "improved the config loading" #displayed there, too
+botversion = "1.7" # displayed in the info command
+changes = "removed some except:s, version bump to 1.7 because it hasn't been already, also removed swearing because i dont want embedbot to have swears ok thanks" #displayed there, too
 # tons of imports
 import subprocess as sp
 import asyncio # you need this for discord.py
@@ -13,12 +13,12 @@ from contextlib import redirect_stdout
 import os # essential here for interacting with the OS
 import datetime # used for telling the time and date, i guess
 import platform # used for telling what OS you are using (i guess)
-import sys # again, essential python stuff for OS and internal python shit
+import sys # again, essential python stuff for OS and internal python stuff
 import traceback
 import json # for teh config
 import time # like datetime, for telling time
 import threading
-import itertools # probably iterator shit? was used in loading screen (spinny line/dot dot dot)
+import itertools # probably iterator stuff? was used in loading screen (spinny line/dot dot dot)
 import urllib.request
 import textwrap # for wrapping the bee movie script
 import random # mostly for *shuffle, which doesnt work anyways
@@ -94,7 +94,7 @@ time.sleep(1)
 logged_in = False
 try:
     passedargs = sys.argv[1]
-except:
+except IndexError:
     passedargs = None
 
 def I(hello):
@@ -120,7 +120,7 @@ def clear_screen():
     if current_os == "Windows":
         tmp = sp.call('cls', shell=True)
 
-# some important shit so that pip works
+# some important stuff so that pip works
 if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
     tmp = sp.call('clear', shell=True)
     pip_os = "pip3"
@@ -128,7 +128,7 @@ if current_os == "Windows":
     tmp = sp.call('cls', shell=True)
     pip_os = "pip"
 
-starttime = datetime.datetime.now() # the current fucking date + time
+starttime = datetime.datetime.now() # the current date + time
 
 try:
     assert sys.version_info >= (3, 5) # bot incompatible with 3.4 and below
@@ -165,7 +165,6 @@ starttext = [
     "from __future__ import braces" # all the loading messages
 ]
 # Strings loading
-# question: what fucking strings tho ~Nikitaw99
 def loadstrings():
     # Totally not copied from [\]
     # sorry info
@@ -180,13 +179,13 @@ loadstrings()
 # Config loading
 try:
     customconfig = sys.argv[1] # loads custom config
-except:
+except IndexError:
     try:
         customconfig = "config.json" # config doesnt exist? then the bot will use default one.
     except OSError:
         print("Uh oh. The default config seems to be missing.")
         print("Attempting to fetch config from github...")
-        # now let's download that shit
+        # now let's download
         import urllib.request
         url = "https://github.com/Luigimaster1/embedbot/blob/master/config.json"
         filename = "config.json"
@@ -992,7 +991,7 @@ async def aesthetics(ctx):
     try:
         arg = ctx.message.clean_content.split(" ", 1)[1]
         await bot.edit_message(ctx.message, charreplace("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ１２３４５６７８９０ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ －＝［］＼＇／．，＜＞？：；｜＋＿）（＊＆＾％＄＃＠！＂｛｝", arg))
-    except:
+    except IndexError:
         pass
 
 try:
