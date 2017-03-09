@@ -284,7 +284,7 @@ async def on_ready():
     print("=================================================================")
     print("                 -Embedbot - Discord Selfbot-")
     print("   By -Kiwi Catnip \\u2661#1540, isy#0669, HYP3RD34TH#2104.")
-    print("                       and Nikitaw99#4332")
+    print("                      and Nikitaw99#4332")
     print("=================================================================")
     print("Login time         : {} milliseconds".format(login_time))
     x = "Logged in as       : {} ({})"
@@ -311,7 +311,7 @@ async def on_ready():
             print("-----------------------------------------------------------------")
         else:
             pass
-    x = Fore.LIGHTGREEN_EX + 'If you get any errors, please join our support server with \n  the '
+    x = Fore.LIGHTGREEN_EX + '  If you get any errors, please join our support server with \n  the '
     y = Fore.LIGHTCYAN_EX + '{}support '.format(invoker) + Fore.LIGHTGREEN_EX
     z = 'command to complain about how we can\'t code.'
     print(x+y+z)
@@ -343,7 +343,7 @@ async def on_ready():
                 em.add_field(name="Profile commands:", value="game, nick, status", inline=True)
                 x = "blur, undertext, invert, f, memberundertale"
                 em.add_field(name="Useless commands:", value=x, inline=True)
-                em.add_field(name="Advanced mode commands:", value="eval", inline=True)
+                em.add_field(name="Advanced mode commands:", value="eval, repl", inline=True)
                 x = "You can use {}help (command) to get the information of that command."
                 em.set_footer(text=x.format(invoker))
                 del x
@@ -587,25 +587,27 @@ async def kill(ctx):
     await bot.logout()
 
 @bot.command(pass_context=True)
-async def quote(ctx, m: discord.Member, *, asdf):
-    asdf = discord.utils.get(bot.messages, id=asdf).content
-    if type(ctx.message.channel) == discord.PrivateChannel:
-        em = discord.Embed(description=asdf, colour=0xFFFFFF)
-        em.set_author(name=m.display_name, icon_url=m.avatar_url)
-        await bot.edit_message(ctx.message, "​", embed=em)
-    else:
-        if ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
-            if ctx.message.author.colour == "#000000":
-                colour = "0xFFFFFF"
-            else:
-                colour = ctx.message.author.colour
-            em = discord.Embed(description=asdf, colour=colour)
-            em.set_author(name=m.display_name, icon_url=m.avatar_url)
+async def quote(ctx, *, asdf):
+    asdf = discord.utils.get(bot.messages, id=asdf)
+    if asdf.content is not None:
+        if type(ctx.message.channel) == discord.PrivateChannel:
+            em = discord.Embed(description=asdf.content, timestamp=asdf.timestamp, colour=0xFFFFFF)
+            em.set_author(name=asdf.author.display_name, icon_url=asdf.author.avatar_url)
             await bot.edit_message(ctx.message, "​", embed=em)
         else:
-            await bot.edit_message(ctx.message,
-                                   "I need the `embed links` permission to send an embed.")
-            await asyncio.sleep(3)
+            if ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
+                if asdf.author.colour == "#000000":
+                    colour = "0xFFFFFF"
+                else:
+                    colour = asdf.author.colour
+                em = discord.Embed(description=asdf.content, timestamp=asdf.timestamp, colour=colour)
+                em.set_author(name=asdf.author.display_name, icon_url=asdf.author.avatar_url)
+                await bot.edit_message(ctx.message, "​", embed=em)
+            else:
+                await bot.edit_message(ctx.message,
+                                       "I need the `embed links` permission to send an embed.")
+    else:
+        await bot.edit_message(ctx.message, "`Could not find the message specified.`")
 
 
 @bot.command(pass_context=True)
