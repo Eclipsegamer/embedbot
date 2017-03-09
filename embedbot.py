@@ -2,8 +2,8 @@
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.6.5" # displayed in the info command
-changes = "Useless Change to the REPL command." #displayed there, too
+botversion = "1.6" # displayed in the info command
+changes = "improved the config loading" #displayed there, too
 # tons of imports
 import subprocess as sp
 import asyncio # you need this for discord.py
@@ -210,7 +210,7 @@ try:
 except json.JSONDecodeError:
     x = "There was a problem with your config file. Make sure that everything is up to date."
     y = "\nIf it still doesn't work, try deleting the config file and creating it again. "
-    z = "Don't use notepad for editing, use notepad++ or another IDE with python support."
+    z = "Don't use notepad for editing, use notepad++!"
     print(x+y+z)
     del x, y, z
 
@@ -718,29 +718,6 @@ async def repl(ctx):
             'author': msg.author,
             '_': None,
         }
-        py_v = sys.version_info
-        t_for = datetime.datetime.now().strftime("%b %d %Y, %H:%M:%S")
-        OS_inf = platform.uname()
-        if platform.system() == "Windows":
-                    term = """```
-Python {}.{}.{} (v{}.{}.{}:{}, {}) [{} {} {} bit ({})] on Embedbot {}
-Type "help", "copyright", "credits" or "license" for more information.
-Type "exit()" or "quit" to exit.
->>>```"""
-            term = term.format(py_v[0], py_v[1], py_v[2], py_v[0], py_v[1],
-                               py_v[2], py_v[3], t_for, OS_inf[0], OS_inf[2],
-                               OS_inf[4][3:], OS_inf[4], botversion)
-        elif platform.system() == "Linux":
-            term = """```md
-Python {}.{}.{} (REPL, {}) [{} {}] 
-[Discord {}] on Embedbot {}
-Type "help", "copyright", "credits" or "license" for more information.
-Type "exit()" or "quit" to exit.
->>>```"""
-            term = term.format(py_v[0], py_v[1], py_v[2], t_for, OS_inf[0],
-                               OS_inf[4], discord.__version__, botversion)
-        else:
-            term = 'Enter code to execute or evaluate. `exit()` or `quit` to exit.'
 
         def cleanup_code(content):
             """Automatically removes code blocks from the code."""
@@ -761,7 +738,8 @@ Type "exit()" or "quit" to exit.
             return
 
         sessions.add(msg.channel.id)
-        await bot.edit_message(msg, term)
+        await bot.edit_message(msg,
+                               'Enter code to execute or evaluate. `exit()` or `quit` to exit.')
         while True:
             response = await bot.wait_for_message(author=msg.author, channel=msg.channel,
                                                   check=lambda m: m.content.startswith('`'))
