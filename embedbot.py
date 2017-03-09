@@ -629,7 +629,7 @@ async def embeds(ctx, *, asdf):
 async def clean(ctx, number: int, match_pattern: str=None):
     channel = ctx.message.channel
     author = ctx.message.author
-    r = await bot.edit_message(ctx.message, "`Deleting messages...`")
+    await bot.edit_message(ctx.message, "`Deleting messages...`")
     to_delete = []
 
     def content_match(_):
@@ -651,9 +651,10 @@ async def clean(ctx, number: int, match_pattern: str=None):
                 to_delete.append(message)
             tmp = message
         tries_left -= 1
-    to_delete.append(ctx.message)
     await slow_deletion(to_delete)
-    await bot.delete_message(r)
+    await bot.edit_message(ctx.message, "`Task completed...`")
+    await asyncio.sleep(3)
+    await bot.delete_message(ctx.message)
     
 
 # Added for extra future use
