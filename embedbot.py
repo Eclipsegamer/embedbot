@@ -3,10 +3,22 @@
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
 botversion = "1.7" # displayed in the info command
-x = "removed some except:s, version bump to 1.7 because it hasn't been already,"
-y = " also removed swearing because i dont want embedbot to have swears ok thanks"
-changes = x+y
+changes = "better command-line argument parsing"
 del x, y
+
+# argument parsing
+import argparse
+print("Imported argparse...")
+x = 'embedbot by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332'
+parser = argparse.ArgumentParser(description=x)
+parser.add_argument("config", type=str, help="config file. defaults to config.json")
+x = "loadmode. 0 is dotdotdot, 1 is spinny line"
+parser.add_argument("-l", "--loadmode", type=int, help=x)
+print("Parsing arguments...")
+passedargs = parser.parse_args()
+print("Arguments parsed.")
+del x
+
 # tons of imports
 import subprocess as sp
 print("Imported subprocess...")
@@ -113,10 +125,6 @@ if needinstall:
 print("Done.")
 time.sleep(1)
 logged_in = False
-try:
-    passedargs = sys.argv[1]
-except IndexError:
-    passedargs = None
 
 def I(hello):
     why_are_you_here = "?"
@@ -207,8 +215,8 @@ loadstrings()
 
 # Config loading
 try:
-    customconfig = sys.argv[1] # loads custom config
-except IndexError:
+    customconfig = passedargs.config
+except OSError:
     try:
         customconfig = "config.json" # config doesnt exist? then the bot will use default one.
     except OSError:
@@ -234,7 +242,7 @@ try:
         rminvokermsg = jsonhandler['autoremoveinvokermessage']
         advancedmode = jsonhandler['advancedmode'] # enables eval
         silent = jsonhandler['silentmode']
-        loadmode = jsonhandler['loadmode'] # 0 is dotdotdot, 1 is spinny-line
+
 except json.JSONDecodeError:
     x = "There was a problem with your config file. Make sure that everything is up to date."
     y = "\nIf it still doesn't work, try deleting the config file and creating it again. "
@@ -243,10 +251,24 @@ except json.JSONDecodeError:
     del x, y, z
 
 print(random.choice(starttext))
-if loadmode == "0":
-    load = itertools.cycle(['.  ', '.. ', '...', '   '])
+if passedargs.loadmode:
+    if loadmode == 0:
+        load = itertools.cycle(['.  ', '.. ', '...', '   '])
+    elif loadmode == 1:
+        load = itertools.cycle(['|', '/', '-', '\\'])
+    else:
+        print("Invalid loadmode argument. Using default...")
+        load = itertools.cycle(['.  ', '.. ', '...', '   '])
 else:
-    load = itertools.cycle(['|', '/', '-', '\\'])
+    load = itertools.cycle(['.  ', '.. ', '...', '   '])
+
+if passedargs.loadmode:
+    if passedargs.loadmode == 0:
+        load = itertools.cycle(['.  ', '.. ', '...', '   '])
+    else:
+        load = itertools.cycle(['|', '/', '-', '\\'])
+else:
+    load = itertools.cycle(['.  ', '.. ', '...', '   '])
 
 sys.stdout.write('Logging in to Discord ')
 cursor.hide()
@@ -256,10 +278,13 @@ def loggingin():
         for i in range(0, 4):
             sys.stdout.write(load.__next__())
             sys.stdout.flush()
-            if loadmode == "0":
-                sys.stdout.write('\b\b\b')
+            if passedargs.loadmode:
+                if passedargs.loadmode == 0:
+                    sys.stdout.write('\b\b\b')
+                else:
+                    sys.stdout.write('\b')
             else:
-                sys.stdout.write('\b')
+                sys.stdout.write('\b\b\b')
             time.sleep(0.5)
             if not getattr(t, "do_run", True):
                 break
