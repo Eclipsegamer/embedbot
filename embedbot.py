@@ -6,25 +6,45 @@ botversion = "1.7" # displayed in the info command
 changes = "removed some except:s, version bump to 1.7 because it hasn't been already, also removed swearing because i dont want embedbot to have swears ok thanks" #displayed there, too
 # tons of imports
 import subprocess as sp
+print("Imported subprocess...")
 import asyncio # you need this for discord.py
+print("Imported asyncio...")
 import inspect
+print("Imported inspect...")
 import io
+print("Imported io...")
 from contextlib import redirect_stdout
+print("Imported redirect_stdout from contextlib...")
 import os # essential here for interacting with the OS
+print("Imported os...")
 import datetime # used for telling the time and date, i guess
+print("Imported datetime...")
 import platform # used for telling what OS you are using (i guess)
+print("Imported platform...")
 import sys # again, essential python stuff for OS and internal python stuff
+print("Imported sys...")
 import traceback
+print("Imported traceback...")
 import json # for teh config
+print("Imported json...")
 import time # like datetime, for telling time
+print("Imported time...")
 import threading
+print("Imported threading...")
 import itertools # probably iterator stuff? was used in loading screen (spinny line/dot dot dot)
+print("Imported itertools...")
 import urllib.request
+print("Imported urllib.request...")
 import textwrap # for wrapping the bee movie script
+print("Imported textwrap...")
 import random # mostly for *shuffle, which doesnt work anyways
+print("Imported random...")
 import pip # for installing packages
+print("Imported pip...")
 import psutil
+print("Imported psutil...")
 from urllib import request
+print("Imported urllib...")
 def install(package):
     """Install a package using pip"""
     pip.main(['install', package])
@@ -148,11 +168,11 @@ except AssertionError: # bot incompatible with 3.4 and below
     print("Embedbot needs Python 3.5 or superior.")
     sys.exit()
 starttext = [
-    "According to all laws of aviation...",
+    "According to all known laws of aviation...",
     "IT'S THE",
     "Uh oh!",
     "Now look at this net",
-    "Deleting {} Drive...".format(psutil.disk_partitions()[0][0]),
+    "Deleting {} drive...".format(psutil.disk_partitions()[0][0]),
     "Installing Bonzi Buddy...",
     "Welcome back!",
     "Readying the felines...",
@@ -162,7 +182,10 @@ starttext = [
     "*Crunch* NO DON'T TOUCH THAT!",
     "BetterDiscord more like sweaterdiscord because nobody wants it",
     "import antigravity",
-    "from __future__ import braces" # all the loading messages
+    "from __future__ import braces",
+    "import this",
+    "import that",
+    ">>> from __future__ import barry_as_FLUFL\n>>> True != False\n  File \"<stdin>\", line 1\n    True != False\n          ^\nSyntaxError: invalid syntax\n>>> True <> False\nTrue"# all the loading messages
 ]
 # Strings loading
 def loadstrings():
