@@ -14,50 +14,73 @@ parser = argparse.ArgumentParser(description=x)
 parser.add_argument("config", type=str, help="config file. defaults to config.json")
 x = "loadmode. 0 is dotdotdot, 1 is spinny line"
 parser.add_argument("-l", "--loadmode", type=int, help=x)
+x = "logging level. defaults to WARNING"
+y = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+parser.add_argument("-d", "--debug", type=str, help=x, choices=y)
 print("Parsing arguments...")
 passedargs = parser.parse_args()
 print("Arguments parsed.")
-del x
+del x, y
+
+# logging set up
+import logging
+loglevel = None
+if passedargs.debug:
+    if passedargs.debug == "DEBUG":
+        loglevel = logging.DEBUG
+    elif passedargs.debug == "INFO":
+        loglevel = logging.INFO
+    elif passedargs.debug == "WARNING":
+        loglevel = logging.WARNING
+    elif passedargs.debug == "ERROR":
+        loglevel = logging.ERROR
+    elif passedargs.debug == "CRITICAL":
+        loglevel = logging.CRITICAL
+else:
+    loglevel = logging.WARNING
+logging.basicConfig(filename='embedbot.log', level=loglevel)
+print("Imported logging...")
+print("Log started! Log will be saved into embedbot.log")
 
 # tons of imports
 import subprocess as sp
-print("Imported subprocess...")
+logging.info("Imported subprocess...")
 import asyncio # you need this for discord.py
-print("Imported asyncio...")
+logging.info("Imported asyncio...")
 import inspect
-print("Imported inspect...")
+logging.info("Imported inspect...")
 import io
-print("Imported io...")
+logging.info("Imported io...")
 from contextlib import redirect_stdout
-print("Imported redirect_stdout from contextlib...")
+logging.info("Imported redirect_stdout from contextlib...")
 import os # essential here for interacting with the OS
-print("Imported os...")
+logging.info("Imported os...")
 import datetime # used for telling the time and date, i guess
-print("Imported datetime...")
+logging.info("Imported datetime...")
 import platform # used for telling what OS you are using (i guess)
-print("Imported platform...")
+logging.info("Imported platform...")
 import sys # again, essential python stuff for OS and internal python stuff
-print("Imported sys...")
+logging.info("Imported sys...")
 import traceback
-print("Imported traceback...")
+logging.info("Imported traceback...")
 import json # for teh config
-print("Imported json...")
+logging.info("Imported json...")
 import time # like datetime, for telling time
-print("Imported time...")
+logging.info("Imported time...")
 import threading
-print("Imported threading...")
+logging.info("Imported threading...")
 import itertools # probably iterator stuff? was used in loading screen (spinny line/dot dot dot)
-print("Imported itertools...")
+logging.info("Imported itertools...")
 import urllib.request
-print("Imported urllib.request...")
+logging.info("Imported urllib.request...")
 import textwrap # for wrapping the bee movie script
-print("Imported textwrap...")
+logging.info("Imported textwrap...")
 import random # mostly for *shuffle, which doesnt work anyways
-print("Imported random...")
+logging.info("Imported random...")
 import pip # for installing packages
-print("Imported pip...")
+logging.info("Imported pip...")
 import psutil
-print("Imported psutil...")
+logging.info("Imported psutil...")
 def install(package):
     """Install a package using pip"""
     pip.main(['install', package])
@@ -70,14 +93,14 @@ try:
     from colorama import Fore, Back, Style
     import colorama
     colorama.init(autoreset=True)
-    print("Imported colorama...")
+    logging.info("Imported colorama...")
 except ImportError:
     if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
         pip_os = "pip3"
     if current_os == "Windows":
         pip_os = "pip"
     installlist.append("colorama")
-    print("Please run \"{} install colorama\".".format(pip_os))
+    logging.warning("Please run \"{} install colorama\".".format(pip_os))
     needinstall = True
 # PIL
 # image manipulation
@@ -87,38 +110,38 @@ try:
     from PIL import ImageFilter
     from PIL import ImageFont
     from PIL import ImageDraw
-    print("Imported pillow...")
+    logging.info("Imported pillow...")
 except ImportError:
     if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
         pip_os = "pip3"
     if current_os == "Windows":
         pip_os = "pip"
     installlist.append("pillow")
-    print("Please run \"{} install pillow\".".format(pip_os))
+    logging.warning("Please run \"{} install pillow\".".format(pip_os))
     needinstall = True
 # cursor
 # ...i dont even know
 try:
     import cursor
-    print("Imported cursor...")
+    logging.info("Imported cursor...")
 except ImportError:
     if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
         pip_os = "pip3"
     if current_os == "Windows":
         pip_os = "pip"
     installlist.append("Cursor")
-    print("Please run \"{} install Cursor\".".format(pip_os))
+    logging.warning("Please run \"{} install Cursor\".".format(pip_os))
     needinstall = True
 # And here's where the installing begins.
 instimporterror = False
 if needinstall:
-    print("Attempting to install them.")
+    logging.warning("Attempting to install the missing modules.")
     for module in installlist:
         install(module)
     x = "If there were any errors, please run embedbot with admininstrator privileges"
     y = ", or please use pip to install them."
     z = "\nIf there was no errors, you can now run embedbot normally."
-    print(x + y + z)
+    logging.warning(x + y + z)
     del x, y, z
     time.sleep(3)
     sys.exit()
