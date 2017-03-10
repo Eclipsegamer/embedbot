@@ -3,7 +3,10 @@
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
 botversion = "1.7" # displayed in the info command
-changes = "removed some except:s, version bump to 1.7 because it hasn't been already, also removed swearing because i dont want embedbot to have swears ok thanks" #displayed there, too
+x = "removed some except:s, version bump to 1.7 because it hasn't been already,"
+y = " also removed swearing because i dont want embedbot to have swears ok thanks"
+changes = x+y
+del x, y
 # tons of imports
 import subprocess as sp
 print("Imported subprocess...")
