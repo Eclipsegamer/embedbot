@@ -4,7 +4,6 @@
 # Oops.
 botversion = "1.7" # displayed in the info command
 changes = "better command-line argument parsing"
-del x, y
 
 # argument parsing
 import argparse
