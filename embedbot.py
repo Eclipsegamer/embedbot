@@ -46,8 +46,6 @@ import pip # for installing packages
 print("Imported pip...")
 import psutil
 print("Imported psutil...")
-from urllib import request
-print("Imported urllib...")
 def install(package):
     """Install a package using pip"""
     pip.main(['install', package])
@@ -170,6 +168,10 @@ except ImportError: # if discord.py aint installed
 except AssertionError: # bot incompatible with 3.4 and below
     print("Embedbot needs Python 3.5 or superior.")
     sys.exit()
+x = ">>> from __future__ import barry_as_FLUFL\n>>> True != False\n"
+y = "  File \"<stdin>\", line 1\n    True != False"
+z = "\n          ^\nSyntaxError: invalid syntax\n>>> True <> False\nTrue"
+# all the loading messages
 starttext = [
     "According to all known laws of aviation...",
     "IT'S THE",
@@ -188,8 +190,9 @@ starttext = [
     "from __future__ import braces",
     "import this",
     "import that",
-    ">>> from __future__ import barry_as_FLUFL\n>>> True != False\n  File \"<stdin>\", line 1\n    True != False\n          ^\nSyntaxError: invalid syntax\n>>> True <> False\nTrue"# all the loading messages
+    x+y+z
 ]
+del x, y, z
 # Strings loading
 def loadstrings():
     # Totally not copied from [\]
@@ -211,14 +214,14 @@ except IndexError:
     except OSError:
         print("Uh oh. The default config seems to be missing.")
         print("Attempting to fetch config from github...")
-        # now let's download
-        import urllib.request
+        # now let's download dat config
         url = "https://github.com/Luigimaster1/embedbot/blob/master/config.json"
         filename = "config.json"
         urllib.request.urlretrieve(url, filename)
-        print("Config file fetched! Trying again...")
+        print("Config file fetched! Please fill up the config file properly.")
         customconfig = filename
         del url, filename
+        sys.exit()
 
 try:
     with open(customconfig) as c:
