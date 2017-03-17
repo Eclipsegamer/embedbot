@@ -1,3 +1,4 @@
+#! /usr/bin/python3.5
 # Embedbot 1.7 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
@@ -8,18 +9,17 @@ changes = "better command-line argument parsing"
 # argument parsing
 import argparse
 print("Imported argparse...")
-x = 'embedbot by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332'
-parser = argparse.ArgumentParser(description=x)
-parser.add_argument("config", type=str, help="config file. defaults to config.json")
-x = "loadmode. 0 is dotdotdot, 1 is spinny line"
-parser.add_argument("-l", "--loadmode", type=int, help=x)
-x = "logging level. defaults to WARNING"
-y = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
-parser.add_argument("-d", "--debug", type=str, help=x, choices=y)
+parser = argparse.ArgumentParser(
+    description='embedbot by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332')
+parser.add_argument("config", type=str, help="config file.", nargs="?", default="config.json")
+parser.add_argument("-l", "--loadmode", type=int,
+                    help="loadmode. 0 is dotdotdot, 1 is spinny line")
+parser.add_argument("-d", "--debug", type=str,
+                    help="logging level. defaults to WARNING", choices=["DEBUG", "INFO", "WARNING",
+                                                                        "ERROR", "CRITICAL"])
 print("Parsing arguments...")
 passedargs = parser.parse_args()
 print("Arguments parsed.")
-del x, y
 
 # logging set up
 import logging
