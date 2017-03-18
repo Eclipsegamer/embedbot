@@ -600,7 +600,6 @@ async def restart(ctx):
     #    passedargsa = passedargsa + i + " "
     passedargsa = str(passedargs.config)
     await bot.edit_message(ctx.message, "`Restarting...`")
-    await bot.say("Restarting with arguments {}".format(str(passedargsa)))
     print("Restarting...")
     await asyncio.sleep(2)
     bot.delete_message(ctx.message)
