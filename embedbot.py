@@ -1,10 +1,10 @@
 #! /usr/bin/python3.5
-# Embedbot 1.7 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
+# Embedbot 1.7.3 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.7" # displayed in the info command
-changes = "better command-line argument parsing"
+botversion = "1.7.3" # displayed in the info command
+changes = "redo clear_screen and fix restart"
 
 # argument parsing
 import argparse
@@ -18,6 +18,7 @@ parser.add_argument("-d", "--debug", type=str,
                     help="logging level. defaults to WARNING", choices=["DEBUG", "INFO", "WARNING",
                                                                         "ERROR", "CRITICAL"])
 print("Parsing arguments...")
+global passedargs
 passedargs = parser.parse_args()
 print("Arguments parsed.")
 
@@ -166,18 +167,15 @@ del I
 
 def clear_screen():
     """Clear stdout."""
-    if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
-        tmp = sp.call('clear', shell=True)
-    if current_os == "Windows":
-        tmp = sp.call('cls', shell=True)
+    sys.stdout.write("\033[2J")
+    sys.stdout.flush()
 
 # some important stuff so that pip works
 if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
-    tmp = sp.call('clear', shell=True)
     pip_os = "pip3"
 if current_os == "Windows":
-    tmp = sp.call('cls', shell=True)
     pip_os = "pip"
+clear_screen()
 
 starttime = datetime.datetime.now() # the current date + time
 
@@ -348,10 +346,7 @@ def helplist(cats, onlycat=None):
 async def on_ready():
     thread.do_run = False
     thread.join()
-    if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
-        tmp = sp.call('clear', shell=True)
-    if current_os == "Windows":
-        tmp = sp.call('cls', shell=True)
+    clear_screen()
     servers = len(bot.servers)
     channels = len([c for c in bot.get_all_channels()])
     login_time = datetime.datetime.now() - starttime
@@ -534,12 +529,8 @@ async def update(ctx):
     await bot.say("The bot has been updated. Please restart the bot.")
 @bot.command(pass_context=True)
 async def cls(ctx):
-    if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
-        tmp = sp.call('clear', shell=True)
-        await bot.edit_message(ctx.message, "`Cleared console`")
-    if current_os == "Windows":
-        tmp = sp.call('cls' , shell=True)
-        bot.edit_message(ctx.message, "`Cleared console.`")
+    clear_screen()
+    bot.edit_message(ctx.message, "`Cleared console.`")
     await asyncio.sleep(3)
     await bot.delete_message(ctx.message)
 
@@ -604,20 +595,25 @@ async def status(ctx, *, status=None):
 
 @bot.command(pass_context=True)
 async def restart(ctx):
+    #passedargsa = ""
+    #for i in vars(passedargs):
+    #    passedargsa = passedargsa + i + " "
+    passedargsa = str(passedargs.config)
     await bot.edit_message(ctx.message, "`Restarting...`")
+    await bot.say("Restarting with arguments {}".format(str(passedargsa)))
     print("Restarting...")
     await asyncio.sleep(2)
     bot.delete_message(ctx.message)
     if current_os == "Windows":
-        if passedargs == None:
+        if passedargsa == None:
             os.system('"' + __file__ + '"')
         else:
-            os.system('"' + __file__ + '" ' + passedargs)
+            os.system('"' + __file__ + '" ' + passedargsa)
     if current_os == "Linux":
-        if passedargs == None:
+        if passedargsa == None:
             os.system('''sudo bash -c "python3 {}"'''.format('"' + __file__ + '"'))
         else:
-            os.system('''sudo bash -c "python3 {} {}"'''.format('"' + __file__ + '" ' + passedargs))
+            os.system('''sudo bash -c "python3 {} {}"'''.format('"' + __file__ + '" ' + passedargsa))
     await bot.logout()
 
 @bot.command(pass_context=True)
