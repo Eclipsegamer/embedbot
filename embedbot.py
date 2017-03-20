@@ -67,11 +67,15 @@ import json # for teh config
 logging.info("Imported json...")
 import time # like datetime, for telling time
 logging.info("Imported time...")
-import threading
-logging.info("Imported threading...")
+try:
+    import threading
+    logging.info("Imported threading...")
+except ImportError:
+    import dummy_threading as threading
+    logging.warning("Threading not installed! Using dummy_threading...")
 import itertools # probably iterator stuff? was used in loading screen (spinny line/dot dot dot)
 logging.info("Imported itertools...")
-import urllib.request
+import urllib.request # internet download stuff
 logging.info("Imported urllib.request...")
 import textwrap # for wrapping the bee movie script
 logging.info("Imported textwrap...")
@@ -163,7 +167,7 @@ I("will be watching.")
 # ===== more bad code starts here =====
 sessions = set()
 
-del I
+del I, there, do
 
 def clear_screen():
     """Clear stdout."""
@@ -181,7 +185,7 @@ starttime = datetime.datetime.now() # the current date + time
 
 try:
     assert sys.version_info >= (3, 5) # bot incompatible with 3.4 and below
-    from discord.ext import commands # ew, discord ext ~Nikitaw99
+    from discord.ext import commands # nice, discord ext ~Nikitaw99
     import discord # guess what this is for
 except ImportError: # if discord.py aint installed
     a = "install discord.py"
@@ -196,9 +200,6 @@ except ImportError: # if discord.py aint installed
 except AssertionError: # bot incompatible with 3.4 and below
     print("Embedbot needs Python 3.5 or superior.")
     sys.exit()
-x = ">>> from __future__ import barry_as_FLUFL\n>>> True != False\n"
-y = "  File \"<stdin>\", line 1\n    True != False"
-z = "\n          ^\nSyntaxError: invalid syntax\n>>> True <> False\nTrue"
 # all the loading messages
 starttext = [
     "According to all known laws of aviation...",
@@ -218,9 +219,19 @@ starttext = [
     "from __future__ import braces",
     "import this",
     "import that",
-    x+y+z
+    """
+    >>> from __future__ import barry_as_FLUFL
+    >>> True != False
+
+  File \"<stdin>\", line 1
+      True != False
+
+          ^
+          SyntaxError: invalid syntax
+          >>> True <> False
+          True
+    """
 ]
-del x, y, z
 # Strings loading
 def loadstrings():
     # Totally not copied from [\]
@@ -238,11 +249,13 @@ try:
     customconfig = passedargs.config
 except OSError:
     try:
-        customconfig = "config.json" # config doesnt exist? then the bot will use default one.
+        # config doesnt exist? then the bot will use default one.
+        customconfig = "config.json"
     except OSError:
+        # but if it doesnt exist...
         print("Uh oh. The default config seems to be missing.")
         print("Attempting to fetch config from github...")
-        # now let's download dat config
+        # ...we will download the one from hte github
         url = "https://github.com/Luigimaster1/embedbot/blob/master/config.json"
         filename = "config.json"
         urllib.request.urlretrieve(url, filename)
@@ -254,21 +267,19 @@ except OSError:
 try:
     with open(customconfig) as c:
         jsonhandler = json.load(c)
-        token = jsonhandler['token'] # token
-        email = jsonhandler['email'] # email
-        password = jsonhandler['password'] # password
-        invoker = jsonhandler['invoker'] # invoker, * by default
+        token = jsonhandler['token'] # user token (CTRL+SHIFT+I > Applications > LocalStorage)
+        email = jsonhandler['email'] # the email used to register with
+        password = jsonhandler['password'] # the current password
+        invoker = jsonhandler['invoker'] # command prefix, * by default
         textargs = jsonhandler['textargs']
         rminvokermsg = jsonhandler['autoremoveinvokermessage']
-        advancedmode = jsonhandler['advancedmode'] # enables eval
+        advancedmode = jsonhandler['advancedmode'] # enables eval and repl
         silent = jsonhandler['silentmode']
 
 except json.JSONDecodeError:
-    x = "There was a problem with your config file. Make sure that everything is up to date."
-    y = "\nIf it still doesn't work, try deleting the config file and creating it again. "
-    z = "Don't use notepad for editing, use notepad++!"
-    print(x+y+z)
-    del x, y, z
+    print("There was a problem with your config file. Make sure that everything is up to date.\n"
+          "If it still doesn't work, try deleting the config file and creating it again.\n"
+          "Don't use notepad for editing, use notepad++!")
 
 print(random.choice(starttext))
 if passedargs.loadmode:
@@ -277,18 +288,18 @@ if passedargs.loadmode:
     elif loadmode == 1:
         load = itertools.cycle(['|', '/', '-', '\\'])
     else:
-        print("Invalid loadmode argument. Using default...")
+        logging.warning("Invalid loadmode argument. Using default...")
         load = itertools.cycle(['.  ', '.. ', '...', '   '])
 else:
     load = itertools.cycle(['.  ', '.. ', '...', '   '])
 
-if passedargs.loadmode:
-    if passedargs.loadmode == 0:
-        load = itertools.cycle(['.  ', '.. ', '...', '   '])
-    else:
-        load = itertools.cycle(['|', '/', '-', '\\'])
-else:
-    load = itertools.cycle(['.  ', '.. ', '...', '   '])
+# if passedargs.loadmode:
+#     if passedargs.loadmode == 0:
+#         load = itertools.cycle(['.  ', '.. ', '...', '   '])
+#     else:
+#         load = itertools.cycle(['|', '/', '-', '\\'])
+# else:
+#     load = itertools.cycle(['.  ', '.. ', '...', '   '])
 
 sys.stdout.write('Logging in to Discord ')
 cursor.hide()
@@ -308,7 +319,7 @@ def loggingin():
             time.sleep(0.5)
             if not getattr(t, "do_run", True):
                 break
-thread = threading.Thread(target=loggingin)
+thread = threading.Thread(target=loggingin) # tbh i like multiprocessing more than threading
 thread.start()
 
 bot = commands.Bot(command_prefix=invoker, self_bot=True)
