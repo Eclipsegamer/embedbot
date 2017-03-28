@@ -95,3 +95,6 @@ ENV/
 
 # Visual Studio Code settings
 .vscode/
+
+# niki's config
+Nikitaw99.json

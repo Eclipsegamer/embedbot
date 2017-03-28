@@ -3,8 +3,8 @@
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.7.3" # displayed in the info command
-changes = "redo clear_screen and fix restart"
+botversion = "1.7.4.1" # displayed in the info command
+changes = "added cat command and made fixes"
 
 # argument parsing
 import argparse
@@ -83,14 +83,25 @@ import random # mostly for *shuffle, which doesnt work anyways
 logging.info("Imported random...")
 import pip # for installing packages
 logging.info("Imported pip...")
-import psutil
-logging.info("Imported psutil...")
+import aiohttp
+logging.info("Import aiohttp...")
 def install(package):
     """Install a package using pip"""
     pip.main(['install', package])
 current_os = platform.system()
 installlist = [] # list of things to install (i guess)
 needinstall = False
+try:
+    import psutil
+    logging.info("Imported psutil...")
+except ImportError:
+    if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
+        pip_os = "pip3"
+    if current_os == "Windows":
+        pip_os = "pip"
+    installlist.append("psutil")
+    logging.warning("Please run \"{} install psutil\".".format(pip_os))
+    needinstall = True
 # Colorama
 # guessing from the name, it's used for coloring terminal text
 try:
@@ -481,21 +492,21 @@ async def on_message(message):
             if not message.content == messagereplace:
                 await bot.edit_message(message, messagereplace)
     await bot.process_commands(message)
-    
+
 @bot.command(pass_context=True)
 async def info(ctx):
     if type(ctx.message.channel) == discord.PrivateChannel:
         embedsendable = True
         em = discord.Embed(description="Embedbot information", colour=0xFFFFFF)
     elif ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
-        em = discord.Embed(description="Embedbot information", colour=ctx.message.author.color) 
+        em = discord.Embed(description="Embedbot information", colour=ctx.message.author.color)
         embedsendable = True
     else:
         embedsendable = False
     if embedsendable:
         em.add_field(name="Discord.py version:", value="{}.{}.{} {}".format(discord.version_info[0], discord.version_info[1], discord.version_info[2], discord.version_info[3]), inline=True)
         em.add_field(name="Embedbot version:", value=botversion, inline=True)
-        em.add_field(name="Made by:", value="-Kiwi Catnip ♡#1540, isy#0669, HYP3RD34TH#2104 and @Nikitaw99#4332.", inline=True)     
+        em.add_field(name="Made by:", value="-Kiwi Catnip ♡#1540, isy#0669, HYP3RD34TH#2104 and @Nikitaw99#4332.", inline=True)
         em.add_field(name="According to all known laws of aviation,", value="a bee should not be able to fly.", inline=True)
         em.add_field(name="Github project:", value="https://www.github.com/Luigimaster1/embedbot", inline=True)
     try:
@@ -646,21 +657,21 @@ async def nick(ctx):
         await bot.edit_message(ctx.message, "Your nickname on this server has been reset.")
         await asyncio.sleep(3)
         await bot.delete_message(ctx.message)
-    
+
 @bot.command(pass_context=True, name="print")
 async def _print(ctx, asdf):
     print(asdf.encode("ascii", "backslashreplace").decode())
     await bot.edit_message(ctx.message, "`Task Executed..`")
     await asyncio.sleep(3)
     await bot.delete_message(ctx.message)
-    
+
 @bot.command(pass_context=True)
 async def test(ctx):
     await bot.edit_message(ctx.message, "`The selfbot is active.`")
     await asyncio.sleep(3)
     await bot.delete_message(ctx.message)
 
-    
+
 @bot.command(pass_context=True)
 async def kill(ctx):
     await bot.edit_message(ctx.message, "`Killed.`")
@@ -736,7 +747,7 @@ async def clean(ctx, number: int, match_pattern: str=None):
     await bot.edit_message(ctx.message, "`Task completed...`")
     await asyncio.sleep(3)
     await bot.delete_message(ctx.message)
-    
+
 
 # Added for extra future use
 async def slow_deletion(messages):
@@ -773,7 +784,7 @@ async def _eval(ctx, *, code: str):
             }
 
             env.update(globals())
- 
+
             try:
                 result = eval(code, env)
                 if inspect.isawaitable(result):
@@ -891,14 +902,14 @@ async def repl(ctx):
             except discord.HTTPException as e:
                 uwotm8 = "**input:**```py\n{}```**output:**```py\nUnexpected error: {}```".format(cleaned,
                                                                                                     e)
-                await bot.edit_message(response, uwotm8)       
+                await bot.edit_message(response, uwotm8)
     else:
         r = await bot.edit_message(msg, "This command is an `advanced mode` command.")
         await asyncio.sleep(3)
-        await bot.delete_message(r)        
-        
-        
-        
+        await bot.delete_message(r)
+
+
+
 @bot.command(pass_context=True)
 async def memberundertale(ctx):
     haswith = ['Frisk', 'Flowey', 'Toriel', 'Papyrus', 'Sans', 'Undyne', 'Mettaton', 'Alphys', 'ASGORE', 'Asriel', 'Chara', 'Gaster', 'Temmie', 'Grillby']
@@ -911,10 +922,10 @@ async def memberundertale(ctx):
 
     await bot.edit_message(ctx.message, "{} out of {} member(s) of this server have undertale related nicknames or usernames.".format(len(people), len(ctx.message.server.members)))
 
-    
+
 @bot.command(pass_context=True)
 async def getinvite(ctx, *, invitearg = None):
-    if invitearg: 
+    if invitearg:
         #servera = discord.utils.get(bot.servers, name=invitearg)
         servera = discord.utils.get(bot.servers, name=invitearg)
         if not servera == None:
@@ -985,7 +996,7 @@ async def blur(ctx):
         inverted_image.save('result.png')
         await bot.send_file(ctx.message.channel, "result.png")
         os.remove("result.png")
-        
+
 @bot.command(pass_context=True)
 async def undertext(ctx, *, inputtext):
     def _path(): # Some temporary path fix (Since the Current method wont work on OS's other than windows)
@@ -1061,7 +1072,7 @@ def charreplace(charset, input):
     regular = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ -=[]\\'/.,<>?:;|+_)(*&^%$#@!\"{}"
     characterset = charset
     converter = dict((ord(x[0]), x[1]) for x in zip(regular, characterset))
-    input = input.translate(converter) 
+    input = input.translate(converter)
     # Output Builder
     result = "" + input + ""
     # Final Task
@@ -1076,10 +1087,19 @@ async def aesthetics(ctx):
     except IndexError:
         pass
 
+@bot.command()
+async def cat():
+    """random cat"""
+    async with aiohttp.get('http://random.cat/meow') as r:
+        if r.status == 200:
+            js = await r.json()
+            url = js['file']
+            await bot.reply(url)
+
 try:
     if token == "None": # For People that use Email and Password.
                         # "None" because json doesn't have None.
-    
+
         if "@" not in email or email == "None": # Checks email.
             thread.do_run = False
             thread.join()
@@ -1110,7 +1130,7 @@ try:
                 print("Invalid email or none provided.")
                 print("Please check your credentials.")
                 sys.exit()
-            else: # 
+            else: #
                 bot.run(email, password, bot=False)
         else:
             bot.run(token, bot=False)
