@@ -3,7 +3,7 @@
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.7.4.1" # displayed in the info command
+botversion = "1.7.4.2" # displayed in the info command
 changes = "added cat command and made fixes"
 
 # argument parsing
