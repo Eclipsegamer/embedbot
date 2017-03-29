@@ -1,3 +1,4 @@
+#! /usr/bin/python3.5
 import pip
 import time
 print("Installing discord.py...")

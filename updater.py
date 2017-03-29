@@ -1,3 +1,4 @@
+#! /usr/bin/python3.5
 """kiwi catnip's bad code"""
 import os
 import platform
