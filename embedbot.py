@@ -1094,7 +1094,7 @@ async def cat():
         if r.status == 200:
             js = await r.json()
             url = js['file']
-            await bot.reply(url)
+            await bot.say(url)
 
 try:
     if token == "None": # For People that use Email and Password.

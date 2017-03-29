@@ -130,6 +130,11 @@
 					"name": "aesthetics",
 					"short": "Makes your text a e s t h e t i c.",
 					"extra": ""
+				},
+				{
+					"name": "cat",
+					"short": "posts a random cat pic",
+					"extra": "...dogs are better anyways"
 				}
 			]
 		}
