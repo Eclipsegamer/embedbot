@@ -43,6 +43,8 @@ print("Imported logging...")
 print("Log started! Log will be saved into embedbot.log")
 
 # tons of imports
+import codecs
+logging.info("Imported codecs...")
 import subprocess as sp
 logging.info("Imported subprocess...")
 import asyncio # you need this for discord.py
@@ -1095,6 +1097,15 @@ async def cat():
             js = await r.json()
             url = js['file']
             await bot.say(url)
+
+@bot.command()
+async def brainfuck(code : str):
+    """runs brainfuck code"""
+    x = "py -3.5 ./Resources/bfcomp.py {}".format(code)
+    result = sp.run(x, stdout=sp.PIPE)
+    result = codecs.decode(result.stdout)
+    result = "```\n{}\n```".format(result)
+    await bot.say(result)
 
 try:
     if token == "None": # For People that use Email and Password.
