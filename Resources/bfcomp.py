@@ -5,6 +5,7 @@ except ImportError:
     import pip
     pip.main(["install", "brainfuck"])
     del pip
+    from brainfuck import NiceInterpreter
 import sys
 x = NiceInterpreter()
 x.setChars()
