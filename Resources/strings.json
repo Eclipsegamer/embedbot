@@ -135,6 +135,11 @@
 					"name": "cat",
 					"short": "posts a random cat pic",
 					"extra": "...dogs are better anyways"
+				},
+				{
+					"name": "brainfuck",
+					"short": "compiles brainfuck code",
+					"extra": "i guess i could say it... brainFUCKS your brain! hahahah!!!"
 				}
 			]
 		}
