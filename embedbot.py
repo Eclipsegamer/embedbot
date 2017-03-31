@@ -3,7 +3,7 @@
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.7.5.3" # displayed in the info command
+botversion = "1.7.5.4" # displayed in the info command
 changes = "added brainfuck command"
 
 # argument parsing
@@ -432,10 +432,10 @@ async def on_ready():
                 embedsendable = False
             if embedsendable:
                 em.add_field(name="Normal commands:", value="embeds, quote, clean", inline=True)
-                x = "info, update, cls, support, kill, restart, print, test"
+                x = "info, update, cls, support, kill, restart, print, test, brainfuck"
                 em.add_field(name="Helpful/technical commands:", value=x, inline=True)
                 em.add_field(name="Profile commands:", value="game, nick, status", inline=True)
-                x = "blur, undertext, invert, f, memberundertale"
+                x = "blur, undertext, invert, f, memberundertale, cat"
                 em.add_field(name="Useless commands:", value=x, inline=True)
                 em.add_field(name="Advanced mode commands:", value="eval, repl", inline=True)
                 x = "You can use {}help (command) to get the information of that command."
