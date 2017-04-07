@@ -794,7 +794,8 @@ async def _eval(ctx, *, code: str):
             except Exception as e:
                 await bot.say(python.format(type(e).__name__ + ': ' + str(e)))
                 return
-            await bot.say(python.format(result))
+            em = discord.Embed(description=python.format(result))
+            await bot.edit_message(ctx.message, embed=em)
     else:
         r = await bot.say("This command is an `advanced mode` command.")
         await asyncio.sleep(3)
