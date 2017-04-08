@@ -39,6 +39,7 @@ def del_rw(action, name, exc):
 shutil.rmtree("./tempupdate/.git/", onerror=del_rw)
 copy_tree(LOCAL_DIR, ".")
 shutil.rmtree("./tempupdate/", onerror=del_rw)
+os.remove("botinfo.json")
 print("Updated!")
 X = "Your config file has been renamed to oldconfig.json, "
 Y = "because the config might have been changed in the new version."

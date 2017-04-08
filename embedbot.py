@@ -3,7 +3,7 @@
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.7.5.6" # displayed in the info command
+botversion = "1.7.6" # displayed in the info command
 changes = "another fix"
 
 # argument parsing
@@ -411,6 +411,10 @@ async def on_ready():
     print(x+y+z)
     del x, y, z
     print("=================================================================")
+    response = urllib.request.urlopen("https://raw.githubusercontent.com/Luigimaster1/embedbot/master/botinfo.json")
+    data = response.read().decode("utf-8")
+    if json.loads(data)["version"] > botversion:
+        print(Fore.LIGHTYELLOW_EX + "Update available! Latest version: {}".format(json.loads(data)["version"]))
     bot.remove_command("help")
     bot.remove_command("HelpFormatter")
     @bot.group(pass_context=True)
@@ -550,6 +554,7 @@ async def update(ctx):
     shutil.rmtree("./tempupdate/.git/", onerror=del_rw)
     copy_tree(local_dir, ".")
     shutil.rmtree("./tempupdate/", onerror=del_rw)
+    os.remove("botinfo.json")
     await bot.say("The bot has been updated. Please restart the bot.")
 @bot.command(pass_context=True)
 async def cls(ctx):
