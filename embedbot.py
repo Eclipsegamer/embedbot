@@ -1,10 +1,10 @@
 #! /usr/bin/python3.5
-# Embedbot 1.7.3 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
+# Embedbot 1.7.6.1 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.7.6" # displayed in the info command
-changes = "another fix"
+botversion = "1.7.6.1" # displayed in the info command
+changes = "added more text args"
 
 # argument parsing
 import argparse
@@ -493,7 +493,8 @@ async def on_message(message):
             z = y.replace("{tableflip}","(╯°□°）╯︵ ┻━┻").replace("{unflip}","┬─┬﻿ ノ( ゜-゜ノ)")
             x = z.replace("{unflip2}","​┬─┬ノ( º ⁓ ºノ)").replace("{unflip3}","┬─┬ノ( º _ ºノ)")
             y = x.replace("{cute}","(◕‿◕✿)").replace("{zwsp}","​").replace("{rtl}","\u202e")
-            messagereplace = y
+            z = y.replace("{shurg}","¯\\\_( )ツ\_/¯").replace("{lenmon}","[̲̅$̲̅(̲̅ ͡° ͜ʖ ͡°̲̅)̲̅$̲̅]​").replace("{pika}","ϞϞ(๑⚈ ․̫ ⚈๑)∩")
+            messagereplace = z
             del x, y, z
             if not message.content == messagereplace:
                 await bot.edit_message(message, messagereplace)
