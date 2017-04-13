@@ -1,10 +1,10 @@
 #! /usr/bin/python3.5
-# Embedbot 1.7.6.1 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
+# Embedbot 1.7.6.2 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.7.6.1" # displayed in the info command
-changes = "added more text args"
+botversion = "1.7.6.2" # displayed in the info command
+changes = "+added color option in config\n*moved around the config loading\n*fixed loadmode\n-removed task completed message after clean"
 
 # argument parsing
 import argparse
@@ -187,6 +187,11 @@ def clear_screen():
     sys.stdout.write("\033[2J")
     sys.stdout.flush()
 
+def color(color):
+    if colorterm == "True":
+        return eval("Fore.{}".format(color))
+    else:
+        return ""
 # some important stuff so that pip works
 if current_os == "Linux" or current_os == "Darwin": # Linux / OSX Fix
     pip_os = "pip3"
@@ -196,6 +201,44 @@ clear_screen()
 
 starttime = datetime.datetime.now() # the current date + time
 
+# Config loading
+try:
+    customconfig = passedargs.config
+except OSError:
+    try:
+        # config doesnt exist? then the bot will use default one.
+        customconfig = "config.json"
+    except OSError:
+        # but if it doesnt exist...
+        print("Uh oh. The default config seems to be missing.")
+        print("Attempting to fetch config from github...")
+        # ...we will download the one from hte github
+        url = "https://github.com/Luigimaster1/embedbot/blob/master/config.json"
+        filename = "config.json"
+        urllib.request.urlretrieve(url, filename)
+        print("Config file fetched! Please fill up the config file properly.")
+        customconfig = filename
+        del url, filename
+        sys.exit()
+
+try:
+    with open(customconfig) as c:
+        jsonhandler = json.load(c)
+        token = jsonhandler['token'] # user token (CTRL+SHIFT+I > Applications > LocalStorage)
+        email = jsonhandler['email'] # the email used to register with
+        password = jsonhandler['password'] # the current password
+        invoker = jsonhandler['invoker'] # command prefix, * by default
+        textargs = jsonhandler['textargs']
+        rminvokermsg = jsonhandler['autoremoveinvokermessage']
+        advancedmode = jsonhandler['advancedmode'] # enables eval and repl
+        silent = jsonhandler['silentmode']
+        colorterm = jsonhandler['color'] # if you want colored messages or not
+except json.JSONDecodeError:
+    print("There was a problem with your config file. Make sure that everything is up to date.\n"
+          "If it still doesn't work, try deleting the config file and creating it again.\n"
+          "Don't use notepad for editing, use notepad++!")
+    sys.exit()
+
 try:
     assert sys.version_info >= (3, 5) # bot incompatible with 3.4 and below
     from discord.ext import commands # nice, discord ext ~Nikitaw99
@@ -203,7 +246,7 @@ try:
 except ImportError: # if discord.py aint installed
     a = "install discord.py"
     print("Discord.py is not installed.")
-    print("Please install it using {}{} {}.".format(Fore.GREEN, pip_os, a))
+    print("Please install it using {}{} {}.".format(color("GREEN"), pip_os, a))
     print("Also, you can install the dev versions from here:")
     print("https://github.com/Rapptz/discord.py")
     print("Note: If you get an error saying pip doesn't exist, try this:")
@@ -257,49 +300,12 @@ def loadstrings():
 
 loadstrings()
 
-# Config loading
-try:
-    customconfig = passedargs.config
-except OSError:
-    try:
-        # config doesnt exist? then the bot will use default one.
-        customconfig = "config.json"
-    except OSError:
-        # but if it doesnt exist...
-        print("Uh oh. The default config seems to be missing.")
-        print("Attempting to fetch config from github...")
-        # ...we will download the one from hte github
-        url = "https://github.com/Luigimaster1/embedbot/blob/master/config.json"
-        filename = "config.json"
-        urllib.request.urlretrieve(url, filename)
-        print("Config file fetched! Please fill up the config file properly.")
-        customconfig = filename
-        del url, filename
-        sys.exit()
-
-try:
-    with open(customconfig) as c:
-        jsonhandler = json.load(c)
-        token = jsonhandler['token'] # user token (CTRL+SHIFT+I > Applications > LocalStorage)
-        email = jsonhandler['email'] # the email used to register with
-        password = jsonhandler['password'] # the current password
-        invoker = jsonhandler['invoker'] # command prefix, * by default
-        textargs = jsonhandler['textargs']
-        rminvokermsg = jsonhandler['autoremoveinvokermessage']
-        advancedmode = jsonhandler['advancedmode'] # enables eval and repl
-        silent = jsonhandler['silentmode']
-
-except json.JSONDecodeError:
-    print("There was a problem with your config file. Make sure that everything is up to date.\n"
-          "If it still doesn't work, try deleting the config file and creating it again.\n"
-          "Don't use notepad for editing, use notepad++!")
-
 print(random.choice(starttext))
 if passedargs.loadmode:
     if loadmode == 0:
         load = itertools.cycle(['.  ', '.. ', '...', '   '])
     elif loadmode == 1:
-        load = itertools.cycle(['|', '/', '-', '\\'])
+        load = itertools.cycle([' |', ' /', ' -', ' \\'])
     else:
         logging.warning("Invalid loadmode argument. Using default...")
         load = itertools.cycle(['.  ', '.. ', '...', '   '])
@@ -314,7 +320,7 @@ else:
 # else:
 #     load = itertools.cycle(['.  ', '.. ', '...', '   '])
 
-sys.stdout.write('Logging in to Discord ')
+sys.stdout.write('Logging in to Discord')
 cursor.hide()
 def loggingin():
     t = threading.currentThread()
@@ -326,7 +332,7 @@ def loggingin():
                 if passedargs.loadmode == 0:
                     sys.stdout.write('\b\b\b')
                 else:
-                    sys.stdout.write('\b')
+                    sys.stdout.write('\b\b')
             else:
                 sys.stdout.write('\b\b\b')
             time.sleep(0.5)
@@ -394,19 +400,19 @@ async def on_ready():
     c = "install clint"
     if silent == "True" or rminvokermsg == "True":
         if silent == "True" and rminvokermsg == "True":
-            print(Fore.YELLOW + 'Silentmode is not implemented yet.')
-            print(Fore.YELLOW + 'Autoremove invoker message is not implemented yet.')
+            print(color("YELLOW") + 'Silentmode is not implemented yet.')
+            print(color("YELLOW") + 'Autoremove invoker message is not implemented yet.')
             print("-----------------------------------------------------------------")
         elif silent == "True" and rminvokermsg == "False":
-            print(Fore.YELLOW + 'Silentmode is not implemented yet.')
+            print(color("YELLOW") + 'Silentmode is not implemented yet.')
             print("-----------------------------------------------------------------")
         elif silent == "False" and rminvokermsg == "True":
-            print(Fore.YELLOW + 'Autoremove invoker message is not fully implemented yet.')
+            print(color("YELLOW") + 'Autoremove invoker message is not fully implemented yet.')
             print("-----------------------------------------------------------------")
         else:
             pass
-    x = Fore.LIGHTGREEN_EX + '  If you get any errors, please join our support server with \n  the '
-    y = Fore.LIGHTCYAN_EX + '{}support '.format(invoker) + Fore.LIGHTGREEN_EX
+    x = color("LIGHTGREEN_EX") + '  If you get any errors, please join our support server with \n  the '
+    y = color("LIGHTCYAN_EX") + '{}support '.format(invoker) + color("LIGHTGREEN_EX")
     z = 'command to complain about how we can\'t code.'
     print(x+y+z)
     del x, y, z
@@ -414,7 +420,7 @@ async def on_ready():
     response = urllib.request.urlopen("https://raw.githubusercontent.com/Luigimaster1/embedbot/master/botinfo.json")
     data = response.read().decode("utf-8")
     if json.loads(data)["version"] > botversion:
-        print(Fore.LIGHTYELLOW_EX + "Update available! Latest version: {}".format(json.loads(data)["version"]))
+        print(color("LIGHTYELLOW_EX") + "Update available! Latest version: {}".format(json.loads(data)["version"]))
     bot.remove_command("help")
     bot.remove_command("HelpFormatter")
     @bot.group(pass_context=True)
@@ -644,6 +650,7 @@ async def restart(ctx):
         else:
             os.system('''sudo bash -c "python3 {} {}"'''.format('"' + __file__ + '" ' + passedargsa))
     await bot.logout()
+    sys.exit()
 
 @bot.command(pass_context=True)
 async def nick(ctx):
@@ -752,8 +759,6 @@ async def clean(ctx, number: int, match_pattern: str=None):
             tmp = message
         tries_left -= 1
     await slow_deletion(to_delete)
-    await bot.edit_message(ctx.message, "`Task completed...`")
-    await asyncio.sleep(3)
     await bot.delete_message(ctx.message)
 
 
