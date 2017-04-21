@@ -202,16 +202,18 @@ clear_screen()
 starttime = datetime.datetime.now() # the current date + time
 
 
+response = urllib.request.urlopen("https://raw.githubusercontent.com/Luigimaster1/embedbot/master/botinfo.json")
+data = response.read().decode("utf-8")
 
 if json.loads(data)["version"] > botversion:
-    if json.loads(data)["forceupdate"] = "true":
+    if json.loads(data)["forceupdate"] == "true":
         print("Updating...")
         import platform
         try:
             from git import Repo
         except ImportError:
             print("Please install the module gitpython.".format(pip_os))
-            sys.exit
+            sys.exit()
         import shutil
         from distutils.dir_util import copy_tree
         import stat
@@ -219,10 +221,19 @@ if json.loads(data)["version"] > botversion:
             os.remove("oldconfig.json")
         except OSError:
             pass
-        os.rename("config.json", "oldconfig.json")
+        try:
+            os.rename("config.json", "oldconfig.json")
+        except FileNotFoundError:
+            pass
         os.remove("embedbot.py") #lol r i p embedbot if this doesn't work r i p my work
-        os.remove("README.md")
-        os.remove("requirements.txt")
+        try:
+            os.remove("README.md")
+        except FileNotFoundError:
+            pass
+        try:
+            os.remove("requirements.txt")
+        except FileNotFoundError:
+            pass
         repo_url = "https://www.github.com/Luigimaster1/embedbot.git"
         local_dir = "./tempupdate/"
         Repo.clone_from(repo_url, local_dir)
@@ -242,7 +253,7 @@ if json.loads(data)["version"] > botversion:
             else:
                 os.system('"' + __file__ + '" ' + passedargsa)
         if current_os == "Linux":
-           if passedargsa == None:
+            if passedargsa == None:
                 os.system('''sudo bash -c "python3 {}"'''.format('"' + __file__ + '"'))
             else:
                 os.system('''sudo bash -c "python3 {} {}"'''.format('"' + __file__ + '" ' + passedargsa))
