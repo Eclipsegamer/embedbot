@@ -1,10 +1,10 @@
 #! /usr/bin/python3.5
-# Embedbot 1.7.6.2 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
+# Embedbot 1.7.6.3 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.7.6.2" # displayed in the info command
-changes = "+added color option in config\n*moved around the config loading\n*fixed loadmode\n-removed task completed message after clean"
+botversion = "1.7.6.3" # displayed in the info command
+changes = "+added force updates - we're now microsoft"
 
 # argument parsing
 import argparse
@@ -200,6 +200,53 @@ if current_os == "Windows":
 clear_screen()
 
 starttime = datetime.datetime.now() # the current date + time
+
+
+
+if json.loads(data)["version"] > botversion:
+    if json.loads(data)["forceupdate"] = "true":
+        print("Updating...")
+        import platform
+        try:
+            from git import Repo
+        except ImportError:
+            print("Please install the module gitpython.".format(pip_os))
+            sys.exit
+        import shutil
+        from distutils.dir_util import copy_tree
+        import stat
+        try:
+            os.remove("oldconfig.json")
+        except OSError:
+            pass
+        os.rename("config.json", "oldconfig.json")
+        os.remove("embedbot.py") #lol r i p embedbot if this doesn't work r i p my work
+        os.remove("README.md")
+        os.remove("requirements.txt")
+        repo_url = "https://www.github.com/Luigimaster1/embedbot.git"
+        local_dir = "./tempupdate/"
+        Repo.clone_from(repo_url, local_dir)
+        def del_rw(action, name, exc):
+            os.chmod(name, stat.S_IWRITE)
+            os.remove(name)
+        shutil.rmtree("./tempupdate/.git/", onerror=del_rw)
+        copy_tree(local_dir, ".")
+        shutil.rmtree("./tempupdate/", onerror=del_rw)
+        os.remove("botinfo.json")
+        passedargsa = str(passedargs.config)
+        print("Restarting...")
+        time.sleep(1)
+        if current_os == "Windows":
+            if passedargsa == None:
+                os.system('"' + __file__ + '"')
+            else:
+                os.system('"' + __file__ + '" ' + passedargsa)
+        if current_os == "Linux":
+           if passedargsa == None:
+                os.system('''sudo bash -c "python3 {}"'''.format('"' + __file__ + '"'))
+            else:
+                os.system('''sudo bash -c "python3 {} {}"'''.format('"' + __file__ + '" ' + passedargsa))
+        sys.exit()
 
 # Config loading
 try:
