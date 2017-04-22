@@ -1,10 +1,10 @@
 #! /usr/bin/python3.5
-# Embedbot 1.7.6.4 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
+# Embedbot 1.7.6.5 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.7.6.4" # displayed in the info command
-changes = "+added option to add an image to custom embeds"
+botversion = "1.7.6.5" # displayed in the info command
+changes = "+added more loading lines"
 
 # argument parsing
 import argparse
@@ -340,10 +340,35 @@ starttext = [
       True != False
 
           ^
-          SyntaxError: invalid syntax
-          >>> True <> False
-          True
-    """
+    SyntaxError: invalid syntax
+    >>> True <> False
+    True
+    """,
+    "Please wait, would you prefer chicken, steak, or tofu?",
+    "Please wait, pay no attention to the man behind the curtain",
+    "Please wait, and enjoy the elevator music",
+    "Please wait, and dream of faster computers",
+    "Please wait, would you like fries with that?",
+    "Please wait, go ahead -- hold your breath",
+    "Please wait, at least you're not on hold",
+    "Please wait, you're not in Kansas any more",
+    "Please wait, the server is powered by a lemon and two electrodes",
+    "Please wait, we love you just the way you are",
+    "Please wait, we're testing your patience",
+    "Please wait, as if you had any other choice",
+    "Please wait, take a moment to sign up for our lovely prizes",
+    "Please wait, don't think of purple hippos",
+    "Please wait, follow the white rabbit",
+    "Please wait, why don't you order a sandwich?",
+    "Please wait, while the satellite moves into position",
+    "Please wait, the bits are flowing slowly today",
+    "Counting backwards from infinity...",
+    "Commencing infinite loop (this may take some time)",
+    "Go get a coffee or something. This is going to take a while.",
+    "Very funny Scotty. Now beam down my clothes.",
+    "Measuring the cable length to fetch your data...",
+    "Loading completed, press F13 to continue.",
+    "Keyboard not found, press Y to continue..."
 ]
 # Strings loading
 def loadstrings():
