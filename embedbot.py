@@ -1,10 +1,10 @@
 #! /usr/bin/python3.5
-# Embedbot 1.7.6.3 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
+# Embedbot 1.7.6.4 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.7.6.3" # displayed in the info command
-changes = "+added force updates - we're now microsoft"
+botversion = "1.7.6.4" # displayed in the info command
+changes = "+added option to add an image to custom embeds"
 
 # argument parsing
 import argparse
@@ -200,7 +200,6 @@ if current_os == "Windows":
 clear_screen()
 
 starttime = datetime.datetime.now() # the current date + time
-
 
 response = urllib.request.urlopen("https://raw.githubusercontent.com/Luigimaster1/embedbot/master/botinfo.json")
 data = response.read().decode("utf-8")
@@ -778,15 +777,22 @@ async def quote(ctx, *, asdf):
 @bot.command(pass_context=True)
 async def embeds(ctx, *, asdf):
     if type(ctx.message.channel) == discord.PrivateChannel:
-        em = discord.Embed(description=asdf, colour=0xFFFFFF)
+        if asdf.split(" ")[0].startswith("--image=") == True:
+            em = discord.Embed(description=asdf.split("--image=" + asdf.split(" ")[0].split("--image=")[1] + " ", 1)[1], colour=0xFFFFFF)
+            em.set_image(url=asdf.split(" ")[0].split("--image=")[1])
+        else:
+            em = discord.Embed(description=asdf, colour=0xFFFFFF)
+        await bot.edit_message(ctx.message, "​", embed=em)
+    elif ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
+        if asdf.split(" ")[0].startswith("--image=") == True:
+            em = discord.Embed(description=asdf.split("--image=" + asdf.split(" ")[0].split("--image=")[1] + " ", 1)[1], colour=ctx.message.author.color)
+            em.set_image(url=asdf.split(" ")[0].split("--image=")[1])
+        else:
+            em = discord.Embed(description=asdf, colour=ctx.message.author.color)
         await bot.edit_message(ctx.message, "​", embed=em)
     else:
-        if ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
-            em = discord.Embed(description=asdf, colour=ctx.message.author.color)
-            await bot.edit_message(ctx.message, "​", embed=em)
-        else:
-            await bot.edit_message(ctx.message,
-                                   "I need the `embed links` permission to send an embed.")
+        await bot.edit_message(ctx.message,
+                               "I need the `embed links` permission to send an embed.")
 
 
 
