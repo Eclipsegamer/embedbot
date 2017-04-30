@@ -1,10 +1,10 @@
 #! /usr/bin/python3.5
-# Embedbot 1.7.6.5 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
+# Embedbot 1.7.6.6 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.7.6.5" # displayed in the info command
-changes = "+added more loading lines"
+botversion = "1.7.6.6" # displayed in the info command
+changes = "*fixed beemovie\n*fixed eval"
 
 # argument parsing
 import argparse
@@ -332,18 +332,6 @@ starttext = [
     "from __future__ import braces",
     "import this",
     "import that",
-    """
-    >>> from __future__ import barry_as_FLUFL
-    >>> True != False
-
-  File \"<stdin>\", line 1
-      True != False
-
-          ^
-    SyntaxError: invalid syntax
-    >>> True <> False
-    True
-    """,
     "Please wait, would you prefer chicken, steak, or tofu?",
     "Please wait, pay no attention to the man behind the curtain",
     "Please wait, and enjoy the elevator music",
@@ -865,14 +853,12 @@ async def _eval(ctx, *, code: str):
     if advancedmode == "True":
         code = code.strip('` ')
         if code == "token":
-            await bot.say("You probably don't want to show your token.",
-                          " If you really do, please write {}eval str(token).".format(invoker))
+            await bot.say("You probably don't want to show your token.".format(invoker))
         elif code == "email":
-            await bot.say("You probably don't want to show your email.",
+            await bot.say("You probably don't want to show your email."
                           " If you really do, please write {}eval str(email).".format(invoker))
         elif code == "password":
-            await bot.say("You probably don't want to show your password.",
-                          " If you really do, please write {}eval str(password).".format(invoker))
+            await bot.say("You probably don't want to show your password.".format(invoker))
         else:
             python = '```py\n{}\n```'
             result = None
@@ -1053,7 +1039,7 @@ async def _beemovie(ctx):
             beemoviet = beem.read()
             textline = textwrap.wrap(beemoviet, width=2000)
             for line in textline:
-                await bot.say(line)
+                await bot.say(line.replace("\\n", "\n"))
                 await asyncio.sleep(1)
     else:
         pass
@@ -1224,7 +1210,7 @@ try:
             thread.do_run = False
             thread.join()
             clear_screen()
-            print("Token is to short.")
+            print("Token is tooc short.")
             print("Try using your email and password instead.\n")
             if "@" not in email: # Checks email.
                 print("Invalid email or none provided.")
