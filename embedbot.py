@@ -362,6 +362,7 @@ starttext = [
 def loadstrings():
     # Totally not copied from [\]
     # sorry info
+    #hey silly! this is the correct one!
     stringsf = open(r"./Resources/strings.json", 'r')
     stringsfr = stringsf.read()
     strings = json.loads(stringsfr)
