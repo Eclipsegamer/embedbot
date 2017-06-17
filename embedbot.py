@@ -1,16 +1,16 @@
 #! /usr/bin/python3.5
-# Embedbot 1.7.6.6 made by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332.
+# Embedbot 2.0 made by -Kiwi Catnip ♡#1540, @isy#4506, @HYP3RD34TH#2104 @Nikitaw99#4332.
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "1.7.6.6" # displayed in the info command
-changes = "*fixed beemovie\n*fixed eval"
+botversion = "2.0" # displayed in the info command
+changes = "It now supports the d.py rewrite."
 
 # argument parsing
 import argparse
 print("Imported argparse...")
 parser = argparse.ArgumentParser(
-    description='embedbot by -Kiwi Catnip ♡#1540, @isy#0669, @HYP3RD34TH#2104 @Nikitaw99#4332')
+    description='embedbot by -Kiwi Catnip ♡#1540, @isy#4506, @HYP3RD34TH#2104 @Nikitaw99#4332')
 parser.add_argument("config", type=str, help="config file.", nargs="?", default="config.json")
 parser.add_argument("-l", "--loadmode", type=int,
                     help="loadmode. 0 is dotdotdot, 1 is spinny line")
@@ -69,6 +69,8 @@ import json # for teh config
 logging.info("Imported json...")
 import time # like datetime, for telling time
 logging.info("Imported time...")
+import requests # CATS
+logging.info("Imported requests...")
 try:
     import threading
     logging.info("Imported threading...")
@@ -182,6 +184,30 @@ sessions = set()
 
 del I, there, do
 
+async def say(messageobject, message=None, emb=None): #copy pasted from nekobot
+    try:
+        if emb != None:
+            object = await messageobject.channel.send(
+                message,
+                embed=emb,
+            )
+            if message == None:
+                messagea = emb.description
+            else:
+                messagea = message
+            #print("NekoBotBeta: {}".format(str(messagea).encode("ascii","backslashreplace").decode()))
+            return object
+        else:
+            object = await messageobject.channel.send(message)
+            if message == None:
+                messagea = emb.description
+            else:
+                messagea = message
+            #print("NekoBotBeta: {}".format(str(messagea).encode("ascii","backslashreplace").decode()))
+            return object
+    except(discord.errors.HTTPException, discord.errors.Forbidden) as e:
+        raise
+
 def clear_screen():
     """Clear stdout."""
     sys.stdout.write("\033[2J")
@@ -282,8 +308,6 @@ try:
     with open(customconfig) as c:
         jsonhandler = json.load(c)
         token = jsonhandler['token'] # user token (CTRL+SHIFT+I > Applications > LocalStorage)
-        email = jsonhandler['email'] # the email used to register with
-        password = jsonhandler['password'] # the current password
         invoker = jsonhandler['invoker'] # command prefix, * by default
         textargs = jsonhandler['textargs']
         rminvokermsg = jsonhandler['autoremoveinvokermessage']
@@ -340,7 +364,7 @@ starttext = [
     "Please wait, go ahead -- hold your breath",
     "Please wait, at least you're not on hold",
     "Please wait, you're not in Kansas any more",
-    "Please wait, the server is powered by a lemon and two electrodes",
+    "Please wait, the guild is powered by a lemon and two electrodes",
     "Please wait, we love you just the way you are",
     "Please wait, we're testing your patience",
     "Please wait, as if you had any other choice",
@@ -362,8 +386,7 @@ starttext = [
 def loadstrings():
     # Totally not copied from [\]
     # sorry info
-    #hey silly! this is the correct one!
-    stringsf = open(r"./Resources/strings.json", 'r')
+    stringsf = open(r".\Resources\strings.json", 'r')
     stringsfr = stringsf.read()
     strings = json.loads(stringsfr)
     global cmds
@@ -448,13 +471,13 @@ async def on_ready():
     thread.do_run = False
     thread.join()
     clear_screen()
-    servers = len(bot.servers)
+    guilds = len(bot.guilds)
     channels = len([c for c in bot.get_all_channels()])
     login_time = datetime.datetime.now() - starttime
     login_time = login_time.seconds + login_time.microseconds/1E6
     print("=================================================================")
     print("                 -Embedbot - Discord Selfbot-")
-    print("   By -Kiwi Catnip \\u2661#1540, isy#0669, HYP3RD34TH#2104.")
+    print("   By -Kiwi Catnip \\u2661#1540, isy#4506, HYP3RD34TH#2104.")
     print("                      and Nikitaw99#4332")
     print("=================================================================")
     print("Login time         : {} milliseconds".format(login_time))
@@ -462,7 +485,7 @@ async def on_ready():
     y = x.format(str(bot.user).encode("ascii", "backslashreplace").decode(), bot.user.id)
     print(y)
     del x, y
-    print("Connected to       : {} servers and {} channels".format(servers, channels))
+    print("Connected to       : {} guilds and {} channels".format(guilds, channels))
     print("-----------------------------------------------------------------")
     print("Python version     : {}.{}.{}".format(*os.sys.version_info[:3]))
     print("Discord.py version : {}".format(discord.__version__))
@@ -482,7 +505,7 @@ async def on_ready():
             print("-----------------------------------------------------------------")
         else:
             pass
-    x = color("LIGHTGREEN_EX") + '  If you get any errors, please join our support server with \n  the '
+    x = color("LIGHTGREEN_EX") + '  If you get any errors, please join our support guild with \n  the '
     y = color("LIGHTCYAN_EX") + '{}support '.format(invoker) + color("LIGHTGREEN_EX")
     z = 'command to complain about how we can\'t code.'
     print(x+y+z)
@@ -503,10 +526,10 @@ async def on_ready():
             helpf = True
         except IndexError:
             helpf = False
-            if type(ctx.message.channel) == discord.PrivateChannel:
+            if ctx.message.guild == None:
                 embedsendable = True
                 em = discord.Embed(description="Help", colour=0xFFFFFF)
-            elif ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
+            elif ctx.message.guild.me.permissions_in(ctx.message.channel).embed_links == True:
                 em = discord.Embed(description="Help", colour=ctx.message.author.color)
                 embedsendable = True
             else:
@@ -522,7 +545,7 @@ async def on_ready():
                 x = "You can use {}help (command) to get the information of that command."
                 em.set_footer(text=x.format(invoker))
                 del x
-                await bot.send_message(ctx.message.channel, embed=em)
+                await say(ctx.message, emb=em)
         if helpf == True:
             content = (helplist(cmds))
 
@@ -553,13 +576,13 @@ async def on_ready():
 
                 if not matched:
                     content = 'Invalid arguments passed, or the command is not in the help list.'
-            if type(ctx.message.channel) == discord.PrivateChannel:
+            if ctx.message.guild == None:
                 embed = discord.Embed(description=content.format(invoker), colour=0xFFFFFF)
-            elif ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
+            elif ctx.message.guild.me.permissions_in(ctx.message.channel).embed_links == True:
                 x = ctx.message.author.color
                 embed = discord.Embed(description=content.format(invoker), colour=x)
                 del x
-            await bot.send_message(ctx.message.channel, embed=embed)
+            await say(ctx.message, emb=embed)
 
 @bot.event
 async def on_message(message):
@@ -574,15 +597,15 @@ async def on_message(message):
             messagereplace = z
             del x, y, z
             if not message.content == messagereplace:
-                await bot.edit_message(message, messagereplace)
+                await message.edit(content=messagereplace)
     await bot.process_commands(message)
 
 @bot.command(pass_context=True)
 async def info(ctx):
-    if type(ctx.message.channel) == discord.PrivateChannel:
+    if ctx.message.guild == None:
         embedsendable = True
         em = discord.Embed(description="Embedbot information", colour=0xFFFFFF)
-    elif ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
+    elif ctx.message.guild.me.permissions_in(ctx.message.channel).embed_links == True:
         em = discord.Embed(description="Embedbot information", colour=ctx.message.author.color)
         embedsendable = True
     else:
@@ -590,27 +613,27 @@ async def info(ctx):
     if embedsendable:
         em.add_field(name="Discord.py version:", value="{}.{}.{} {}".format(discord.version_info[0], discord.version_info[1], discord.version_info[2], discord.version_info[3]), inline=True)
         em.add_field(name="Embedbot version:", value=botversion, inline=True)
-        em.add_field(name="Made by:", value="-Kiwi Catnip ♡#1540, isy#0669, HYP3RD34TH#2104 and @Nikitaw99#4332.", inline=True)
+        em.add_field(name="Made by:", value="-Kiwi Catnip ♡#1540, isy#4506, HYP3RD34TH#2104 and @Nikitaw99#4332.", inline=True)
         em.add_field(name="According to all known laws of aviation,", value="a bee should not be able to fly.", inline=True)
         em.add_field(name="Github project:", value="https://www.github.com/Luigimaster1/embedbot", inline=True)
     try:
-        await bot.edit_message(ctx.message, "​", embed=em)
+        await ctx.message.edit(content="​", embed=em)
     except:
-        await bot.say("Discord.py version: {}.{}.{} {}\n",
+        await say(ctx.message, "Discord.py version: {}.{}.{} {}\n",
         "Embedbot version: {}\n",
-        "Made by: -Kiwi Catnip ♡#1540, isy#0669 and HYP3RD34TH#2104.\n",
+        "Made by: -Kiwi Catnip ♡#1540, isy#4506 and HYP3RD34TH#2104.\n",
         "According to all known laws of aviation, a bee should not be able to fly.\n",
         "Github project: https://www.github.com/Luigimaster1/embedbot"
         .format(discord.version_info[0], discord.version_info[1], discord.version_info[2], discord.version_info[3], botversion))
 
 @bot.command(pass_context=True)
 async def update(ctx):
-    await bot.say("Updating...")
+    await say(ctx.message, "Updating...")
     import platform
     try:
         from git import Repo
     except ImportError:
-        await bot.say("Please install the module gitpython.".format(pip_os))
+        await say(ctx.message, "Please install the module gitpython.".format(pip_os))
         return
     import shutil
     from distutils.dir_util import copy_tree
@@ -633,49 +656,31 @@ async def update(ctx):
     copy_tree(local_dir, ".")
     shutil.rmtree("./tempupdate/", onerror=del_rw)
     os.remove("botinfo.json")
-    await bot.say("The bot has been updated. Please restart the bot.")
+    await say(ctx.message, "The bot has been updated. Please restart the bot.")
 @bot.command(pass_context=True)
 async def cls(ctx):
     clear_screen()
-    bot.edit_message(ctx.message, "`Cleared console.`")
+    ctx.message.edit(content="`Cleared console.`")
     await asyncio.sleep(3)
-    await bot.delete_message(ctx.message)
+    await ctx.message.delete()
 
 @bot.command(name="support", pass_context=True)
 async def _join_support(ctx):
-    edit = bot.edit_message
-    try:
-        await bot.accept_invite(invite_url)
-        await edit(ctx.message, "`Joined support server. (Alexia's Hangout)`\n"
-                                "`Check your server list.`")
-        if rminvokermsg == "True":
-            await asyncio.sleep(3)
-            bot.delete_message(ctx.message)
-        else:
-            pass
-    except discord.NotFound:
-        await edit(ctx.message, "`The invite was invalid or expired.`\n"
-                                "`Please go to our github page shown in the console.`")
-        print("Github page: https://goo.gl/kXy1oM")
-    except discord.HTTPException:
-        await edit(ctx.message, "`[ERROR]: wasn't able to join the server.`\n"
-                                "`Try again later.`")
-    await asyncio.sleep(3)
-    await bot.delete_message(ctx.message)
+    await ctx.message.edit(content=invite_url)
 
 @bot.command(pass_context=True)
 async def game(ctx, *, game=None):
-    server = ctx.message.server
-    current_status = server.me.status if server is not None else None
+    guild = ctx.message.guild
+    current_status = guild.me.status if guild is not None else None
     if game:
         game = game.strip()
         await bot.change_presence(game=discord.Game(name=game), status=current_status)
-        await bot.edit_message(ctx.message, 'Playing status changed to **{}**.'.format(game))
+        await ctx.message.edit(content='Playing status changed to **{}**.'.format(game))
     else:
         await bot.change_presence(game=None, status=current_status)
-        await bot.edit_message(ctx.message, "`Cleared playing status.`")
+        await ctx.message.edit(content="`Cleared playing status.`")
     await asyncio.sleep(3)
-    await bot.delete_message(ctx.message)
+    await ctx.message.delete()
 
 
 @bot.command(pass_context=True)
@@ -687,18 +692,18 @@ async def status(ctx, *, status=None):
         "invisible" : discord.Status.invisible,
         "offline"   : discord.Status.invisible
         }
-    server = ctx.message.server
-    current_game = server.me.game if server is not None else None
+    guild = ctx.message.guild
+    current_game = guild.me.game if guild is not None else None
     if status is None:
         await bot.change_presence(status=discord.Status.online, game=current_game)
-        await bot.edit_message(ctx.message, "`Status reset.`")
+        await ctx.message.edit(content="`Status reset.`")
 
     else:
         status = statuses.get(status.lower(), None)
         await bot.change_presence(status=status, game=current_game)
-        await bot.edit_message(ctx.message, "Status set to **{}**.".format(status))
+        await ctx.message.edit(content="Status set to **{}**.".format(status))
     await asyncio.sleep(3)
-    await bot.delete_message(ctx.message)
+    await ctx.message.delete()
 
 @bot.command(pass_context=True)
 async def restart(ctx):
@@ -706,10 +711,10 @@ async def restart(ctx):
     #for i in vars(passedargs):
     #    passedargsa = passedargsa + i + " "
     passedargsa = str(passedargs.config)
-    await bot.edit_message(ctx.message, "`Restarting...`")
+    await ctx.message.edit(content="`Restarting...`")
     print("Restarting...")
     await asyncio.sleep(2)
-    bot.delete_message(ctx.message)
+    ctx.message.delete()
     if current_os == "Windows":
         if passedargsa == None:
             os.system('"' + __file__ + '"')
@@ -728,39 +733,39 @@ async def nick(ctx):
     try:
         cmdarg = ctx.message.content.split(" ", 1)[1]
         try:
-            await bot.change_nickname(ctx.message.server.me, cmdarg)
+            await bot.change_nickname(ctx.message.guild.me, cmdarg)
             await asyncio.sleep(0.3)
-            await bot.edit_message(ctx.message, "Your nickname on this server has been changed to **{}**.".format(cmdarg))
+            await ctx.message.edit(content="Your nickname on this guild has been changed to **{}**.".format(cmdarg))
             await asyncio.sleep(3)
-            await bot.delete_message(ctx.message)
+            await ctx.message.delete()
         except:
-            await bot.edit_message(ctx.message, "Your nickname could not be changed on this server.")
+            await ctx.message.edit(content="Your nickname could not be changed on this guild.")
         await asyncio.sleep(3)
-        await bot.delete_message(ctx.message)
+        await ctx.message.delete()
     except IndexError:
-        await bot.change_nickname(ctx.message.server.me, "")
+        await bot.change_nickname(ctx.message.guild.me, "")
         await asyncio.sleep(0.3)
-        await bot.edit_message(ctx.message, "Your nickname on this server has been reset.")
+        await ctx.message.edit(content="Your nickname on this guild has been reset.")
         await asyncio.sleep(3)
-        await bot.delete_message(ctx.message)
+        await ctx.message.delete()
 
 @bot.command(pass_context=True, name="print")
 async def _print(ctx, asdf):
     print(asdf.encode("ascii", "backslashreplace").decode())
-    await bot.edit_message(ctx.message, "`Task Executed..`")
+    await ctx.message.edit(content="`Task Executed..`")
     await asyncio.sleep(3)
-    await bot.delete_message(ctx.message)
+    await ctx.message.delete()
 
 @bot.command(pass_context=True)
 async def test(ctx):
-    await bot.edit_message(ctx.message, "`The selfbot is active.`")
+    await ctx.message.edit(content="`The selfbot is active.`")
     await asyncio.sleep(3)
-    await bot.delete_message(ctx.message)
+    await ctx.message.delete()
 
 
 @bot.command(pass_context=True)
 async def kill(ctx):
-    await bot.edit_message(ctx.message, "`Killed.`")
+    await ctx.message.edit(content="`Killed.`")
     await asyncio.sleep(1)
     await bot.logout()
 
@@ -768,44 +773,44 @@ async def kill(ctx):
 async def quote(ctx, *, asdf):
     asdf = discord.utils.get(bot.messages, id=asdf)
     if asdf.content is not None:
-        if type(ctx.message.channel) == discord.PrivateChannel:
+        if ctx.message.guild == None:
             em = discord.Embed(description=asdf.content, timestamp=asdf.timestamp, colour=0xFFFFFF)
             em.set_author(name=asdf.author.display_name, icon_url=asdf.author.avatar_url)
-            await bot.edit_message(ctx.message, "​", embed=em)
+            await ctx.message.edit(content="​", embed=em)
         else:
-            if ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
+            if ctx.message.guild.me.permissions_in(ctx.message.channel).embed_links == True:
                 if asdf.author.colour == "#000000":
                     colour = "0xFFFFFF"
                 else:
                     colour = asdf.author.colour
                 em = discord.Embed(description=asdf.content, timestamp=asdf.timestamp, colour=colour)
                 em.set_author(name=asdf.author.display_name, icon_url=asdf.author.avatar_url)
-                await bot.edit_message(ctx.message, "​", embed=em)
+                await ctx.message.edit(content="​", embed=em)
             else:
-                await bot.edit_message(ctx.message,
+                await ctx.message.edit(
                                        "I need the `embed links` permission to send an embed.")
     else:
-        await bot.edit_message(ctx.message, "`Could not find the message specified.`")
+        await ctx.message.edit(content="`Could not find the message specified.`")
 
 
 @bot.command(pass_context=True)
 async def embeds(ctx, *, asdf):
-    if type(ctx.message.channel) == discord.PrivateChannel:
+    if ctx.message.guild == None:
         if asdf.split(" ")[0].startswith("--image=") == True:
             em = discord.Embed(description=asdf.split("--image=" + asdf.split(" ")[0].split("--image=")[1] + " ", 1)[1], colour=0xFFFFFF)
             em.set_image(url=asdf.split(" ")[0].split("--image=")[1])
         else:
             em = discord.Embed(description=asdf, colour=0xFFFFFF)
-        await bot.edit_message(ctx.message, "​", embed=em)
-    elif ctx.message.server.me.permissions_in(ctx.message.channel).embed_links == True:
+        await ctx.message.edit(content="​", embed=em)
+    elif ctx.message.guild.me.permissions_in(ctx.message.channel).embed_links == True:
         if asdf.split(" ")[0].startswith("--image=") == True:
             em = discord.Embed(description=asdf.split("--image=" + asdf.split(" ")[0].split("--image=")[1] + " ", 1)[1], colour=ctx.message.author.color)
             em.set_image(url=asdf.split(" ")[0].split("--image=")[1])
         else:
             em = discord.Embed(description=asdf, colour=ctx.message.author.color)
-        await bot.edit_message(ctx.message, "​", embed=em)
+        await ctx.message.edit(content="​", embed=em)
     else:
-        await bot.edit_message(ctx.message,
+        await ctx.message.edit(
                                "I need the `embed links` permission to send an embed.")
 
 
@@ -814,7 +819,7 @@ async def embeds(ctx, *, asdf):
 async def clean(ctx, number: int, match_pattern: str=None):
     channel = ctx.message.channel
     author = ctx.message.author
-    await bot.edit_message(ctx.message, "`Deleting messages...`")
+    await ctx.message.edit(content="`Deleting messages...`")
     to_delete = []
 
     def content_match(_):
@@ -837,14 +842,14 @@ async def clean(ctx, number: int, match_pattern: str=None):
             tmp = message
         tries_left -= 1
     await slow_deletion(to_delete)
-    await bot.delete_message(ctx.message)
+    await ctx.message.delete()
 
 
 # Added for extra future use
 async def slow_deletion(messages):
     for message in messages:
         try:
-            await bot.delete_message(message)
+            await bot.message.delete()
         except:
             pass
 
@@ -854,12 +859,12 @@ async def _eval(ctx, *, code: str):
     if advancedmode == "True":
         code = code.strip('` ')
         if code == "token":
-            await bot.say("You probably don't want to show your token.".format(invoker))
+            await say(ctx.message, "You probably don't want to show your token.".format(invoker))
         elif code == "email":
-            await bot.say("You probably don't want to show your email."
+            await say(ctx.message, "You probably don't want to show your email."
                           " If you really do, please write {}eval str(email).".format(invoker))
         elif code == "password":
-            await bot.say("You probably don't want to show your password.".format(invoker))
+            await say(ctx.message, "You probably don't want to show your password.".format(invoker))
         else:
             python = '```py\n{}\n```'
             result = None
@@ -867,7 +872,7 @@ async def _eval(ctx, *, code: str):
             env = {
                 'ctx': ctx,
                 'message': ctx.message,
-                'server': ctx.message.server,
+                'guild': ctx.message.guild,
                 'channel': ctx.message.channel,
                 'author': ctx.message.author
             }
@@ -879,14 +884,17 @@ async def _eval(ctx, *, code: str):
                 if inspect.isawaitable(result):
                     result = await result
             except Exception as e:
-                await bot.say(python.format(type(e).__name__ + ': ' + str(e)))
+                await say(python.format(type(e).__name__ + ': ' + str(e)))
                 return
             em = discord.Embed(description=python.format(result))
-            await bot.edit_message(ctx.message, embed=em)
+            await ctx.message.edit(embed=em)
     else:
-        r = await bot.say("This command is an `advanced mode` command.")
+        r = await say(ctx.message, "This command is an `advanced mode` command.")
         await asyncio.sleep(3)
         await bot.delete_message(r)
+
+def replcheck(msg):
+    return msg.content.startswith('`') and msg.author==msg.guild.me
 
 @bot.command(pass_context=True, name='repl')
 async def repl(ctx):
@@ -896,7 +904,7 @@ async def repl(ctx):
             'ctx': ctx,
             'bot': bot,
             'message': msg,
-            'server': msg.server,
+            'guild': msg.guild,
             'channel': msg.channel,
             'author': msg.author,
             '_': None,
@@ -916,21 +924,18 @@ async def repl(ctx):
                 return '```py\n{0.__class__.__name__}: {0}\n```'.format(e)
             return '```py\n{0.text}{1:>{0.offset}}\n{2}: {0}```'.format(e, '^', type(e).__name__)
         if msg.channel.id in sessions:
-            await bot.edit_message(msg,
-                                   'Already running a REPL session in this channel. Exit it with `quit`.')
+            await msg.edit(content='Already running a REPL session in this channel. Exit it with `quit`.')
             return
 
         sessions.add(msg.channel.id)
-        await bot.edit_message(msg,
-                               'Enter code to execute or evaluate. `exit()` or `quit` to exit.')
+        await msg.edit(content='Enter code to execute or evaluate. `exit()` or `quit` to exit.')
         while True:
-            response = await bot.wait_for_message(author=msg.author, channel=msg.channel,
-                                                  check=lambda m: m.content.startswith('`'))
+            response = await bot.wait_for('message', check=replcheck)
 
             cleaned = cleanup_code(response.content)
 
             if cleaned in ('quit', 'exit', 'exit()'):
-                await bot.say('Exiting.')
+                await say(ctx.message, 'Exiting.')
                 sessions.remove(msg.channel.id)
                 return
 
@@ -950,7 +955,7 @@ async def repl(ctx):
                 except SyntaxError as e:
                     aaa = "**input:**```py\n{}```**output:**{}".format(cleaned,
                                                                        get_syntax_error(e))
-                    await bot.edit_message(response, aaa)
+                    await response.edit(content=aaa)
                     continue
 
             variables['message'] = response
@@ -977,11 +982,10 @@ async def repl(ctx):
             try:
                 if fmt is not None:
                     if len(fmt) > 2000:
-                        await bot.edit_message(response, 'Content too big to be printed.')
+                        await response.edit(content='Content too big to be printed.')
                     else:
-                        fmt = "**input:**```py\n{}```**output:**{}".format(cleaned,
-                                                                            fmt)
-                        await bot.edit_message(response, fmt)
+                        em = discord.Embed(description=fmt)
+                        await response.edit(embed=em)
                 elif fmt is None:
                     try:
                         await bot.add_reaction(response, '\u2705')
@@ -992,9 +996,9 @@ async def repl(ctx):
             except discord.HTTPException as e:
                 uwotm8 = "**input:**```py\n{}```**output:**```py\nUnexpected error: {}```".format(cleaned,
                                                                                                     e)
-                await bot.edit_message(response, uwotm8)
+                await response.edit(content=uwotm8)
     else:
-        r = await bot.edit_message(msg, "This command is an `advanced mode` command.")
+        r = await msg.edit(content="This command is an `advanced mode` command.")
         await asyncio.sleep(3)
         await bot.delete_message(r)
 
@@ -1006,41 +1010,52 @@ async def memberundertale(ctx):
     people = []
 
     for i in haswith:
-        for member in ctx.message.server.members:
+        for member in ctx.message.guild.members:
             if i.lower() in member.display_name.lower():
                 people.append(member)
 
-    await bot.edit_message(ctx.message, "{} out of {} member(s) of this server have undertale related nicknames or usernames.".format(len(people), len(ctx.message.server.members)))
+    await ctx.message.edit(content="{} out of {} member(s) of this guild have undertale related nicknames or usernames.".format(len(people), len(ctx.message.guild.members)))
 
 
 @bot.command(pass_context=True)
 async def getinvite(ctx, *, invitearg = None):
     if invitearg:
-        #servera = discord.utils.get(bot.servers, name=invitearg)
-        servera = discord.utils.get(bot.servers, name=invitearg)
-        if not servera == None:
-            invitea = await bot.create_invite(servera)
+        #guilda = discord.utils.get(bot.guilds, name=invitearg)
+        guilda = discord.utils.get(bot.guilds, name=invitearg)
+        if not guilda == None:
+            invitea = await bot.create_invite(guilda)
         else:
-            invitea = "That server doesn't exist."
-        await bot.say(invitea)
+            invitea = "That guild doesn't exist."
+        await say(invitea)
         return
-    invite = await bot.create_invite(ctx.message.server)
-    await bot.say(invite)
+    invite = await bot.create_invite(ctx.message.guild)
+    await say(invite)
 
 @bot.command(pass_context=True)
 async def changelog(ctx):
-    await bot.say("Changes for {}:\n{}".format(botversion, changes))
+    await say(ctx.message, "Changes for {}:\n{}".format(botversion, changes))
 # ----- Non useful commands ----- #
 
-@bot.command(pass_context=True, name="**beemovie***")
+@bot.command(pass_context=True)
+async def changeavy(ctx):
+    #wew
+    if ctx.message.author.id == 155651120344203265:
+        filename = random.choice(os.listdir(".\\Resources\\gla\\"))
+        randavy = open(".\\Resources\\gla\\" + filename, 'rb')
+        await bot.edit_profile(avatar=randavy.read(), password = password)
+        await say(ctx.message, "Your avatar has been changed.")
+    else:
+        pass
+
+@bot.command(pass_context=True, name="beemovie!")
 async def _beemovie(ctx):
-    #If you use this, rest in... you're dumb if you use this.
-    if ctx.message.author.id == "155651120344203265":
+    #If you use this, rest in... don't use this.
+    if ctx.message.author.id == 155651120344203265:
         with open(r".\Resources\beemovie.txt", 'r') as beem:
             beemoviet = beem.read()
             textline = textwrap.wrap(beemoviet, width=2000)
             for line in textline:
-                await bot.say(line.replace("\\n", "\n"))
+                await say(ctx.message, line.replace("\\n", "\n"))
                 await asyncio.sleep(1)
     else:
         pass
@@ -1064,10 +1079,10 @@ async def blur(ctx):
             image = Image.open('OhYes.png')
             inverted_image = image.filter(ImageFilter.GaussianBlur(radius=2))
             inverted_image.save('result.png')
-            await bot.send_file(ctx.message.channel, "result.png")
+            await ctx.message.channel.send(file=discord.File("result.png"))
             os.remove("result.png")
         else:
-            await bot.say("Please enter a link after the command.")
+            await say(ctx.message, "Please enter a link after the command.")
     else:
         attachtoretrieve = urllib.request.Request(
             ctx.subcommand_passed,
@@ -1084,7 +1099,7 @@ async def blur(ctx):
         image = Image.open('OhYes.png')
         inverted_image = image.filter(ImageFilter.GaussianBlur(radius=2))
         inverted_image.save('result.png')
-        await bot.send_file(ctx.message.channel, "result.png")
+        await ctx.message.channel.send(file=discord.File("result.png"))
         os.remove("result.png")
 
 @bot.command(pass_context=True)
@@ -1107,7 +1122,7 @@ async def undertext(ctx, *, inputtext):
         draw.text((margin, offset), line,(255,255,255),font=font)
         offset += 200
     img.save("%Resources$Images$Output$Textbox.png".replace("%", p2).replace("$", p1))
-    await bot.send_file(ctx.message.channel, "%Resources$Images$Output$Textbox.png".replace("%", p2).replace("$", p1))
+    await ctx.message.channel.send(file=discord.File("%Resources$Images$Output$Textbox.png".replace("%", p2).replace("$", p1)))
     os.remove("%Resources$Images$Output$Textbox.png".replace("%", p2).replace("$", p1))
 
 @bot.group(pass_context=True)
@@ -1129,10 +1144,10 @@ async def invert(ctx):
             image = Image.open('OhYes.png')
             inverted_image = PIL.ImageOps.invert(image)
             inverted_image.save('result.png')
-            await bot.send_file(ctx.message.channel, "result.png")
+            await ctx.message.channel.send(file=discord.File("result.png"))
             os.remove("result.png")
         else:
-            await bot.say("Please enter a link after the command.")
+            await say(ctx.message, "Please enter a link after the command.")
     else:
         attachtoretrieve = urllib.request.Request(
             ctx.subcommand_passed,
@@ -1149,12 +1164,12 @@ async def invert(ctx):
         image = Image.open('OhYes.png')
         inverted_image = PIL.ImageOps.invert(image)
         inverted_image.save('result.png')
-        await bot.send_file(ctx.message.channel, "result.png")
+        await ctx.message.channel.send(file=discord.File("result.png"))
         os.remove("result.png")
 
 @bot.command(pass_context=True)
 async def f(ctx):
-    await bot.edit_message(ctx.message, "`Respects have been paid.`")
+    await ctx.message.edit(content="`Respects have been paid.`")
     await bot.add_reaction(ctx.message, '\U0001f1eb')
 
 def charreplace(charset, input):
@@ -1173,18 +1188,17 @@ async def aesthetics(ctx):
     """wewlad"""
     try:
         arg = ctx.message.clean_content.split(" ", 1)[1]
-        await bot.edit_message(ctx.message, charreplace("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ１２３４５６７８９０ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ －＝［］＼＇／．，＜＞？：；｜＋＿）（＊＆＾％＄＃＠！＂｛｝", arg))
+        await ctx.message.edit(content=charreplace("ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ１２３４５６７８９０ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ －＝［］＼＇／．，＜＞？：；｜＋＿）（＊＆＾％＄＃＠！＂｛｝", arg))
     except IndexError:
         pass
 
-@bot.command()
-async def cat():
+@bot.command(pass_context=True)
+async def cat(ctx):
     """random cat"""
-    async with aiohttp.get('http://random.cat/meow') as r:
-        if r.status == 200:
-            js = await r.json()
-            url = js['file']
-            await bot.say(url)
+    r = requests.get('http://random.cat/meow')
+    if r.status_code == 200:
+        url = r.json()["file"]
+        await say(ctx.message, "{}, Here's your cat!\n{}".format(ctx.message.author.mention, url))
 
 @bot.command()
 async def brainfuck(code : str):
@@ -1193,50 +1207,18 @@ async def brainfuck(code : str):
     result = sp.run(x, stdout=sp.PIPE)
     result = codecs.decode(result.stdout)
     result = "```\n{}\n```".format(result)
-    await bot.say(result)
+    await say(result)
 
-try:
-    if token == "None": # For People that use Email and Password.
-                        # "None" because json doesn't have None.
-
-        if "@" not in email or email == "None": # Checks email.
-            thread.do_run = False
-            thread.join()
-            clear_screen()
-            print("Invalid email or none provided.")
-            print("Please check your credentials.")
-        bot.run(email, password, bot=False)
-    else:
-        if len(token) < 50: # Checking Token's Length.
-            thread.do_run = False
-            thread.join()
-            clear_screen()
-            print("Token is tooc short.")
-            print("Try using your email and password instead.\n")
-            if "@" not in email: # Checks email.
-                print("Invalid email or none provided.")
-                print("Please check your credentials.")
-                sys.exit()
-            else:
-                bot.run(email, password, bot=False)
-        elif len(token) > 90: # Checking Token's Length.
-            thread.do_run = False
-            thread.join()
-            clear_screen()
-            print("Token is to long.")
-            print("Try using your email and password instead.\n")
-            if "@" not in email: # Checks email.
-                print("Invalid email or none provided.")
-                print("Please check your credentials.")
-                sys.exit()
-            else: #
-                bot.run(email, password, bot=False)
-        else:
-            bot.run(token, bot=False)
-except:
-    print("There was a problem logging in.")
-    print("Check your internet connection.")
-    print("If you haven't already, please add your credentials in config.json,")
-    print("and make sure they're correct.")
-    time.sleep(5)
+#try:
+if token == "None": # For People that use Email and Password.
+    print("Please enter your token into the config file.")
     sys.exit()
+else:
+    bot.run(token, bot=False)
+#except:
+#    print("There was a problem logging in.")
+#    print("Check your internet connection.")
+#    print("If you haven't already, please add your credentials in config.json,")
+#    print("and make sure they're correct.")
+#    time.sleep(5)
+#    sys.exit()

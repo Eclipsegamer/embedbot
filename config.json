@@ -1,7 +1,5 @@
 {
            "token": "None",
-           "email": "None",
-           "password": "None",
            "invoker": "*",
            "textargs": "True",
            "advancedmode": "False",
