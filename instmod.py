@@ -2,7 +2,7 @@
 import pip
 import time
 print("Installing discord.py...")
-pip.main(['install', "discord.py"])
+pip.main(['install', "git+https://github.com/Rapptz/discord.py@rewrite"])
 print("Installing colorama...")
 pip.main(['install', "colorama"])
 print("Installing pillow...")

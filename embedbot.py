@@ -329,9 +329,9 @@ except ImportError: # if discord.py aint installed
     print("Discord.py is not installed.")
     print("Please install it using {}{} {}.".format(color("GREEN"), pip_os, a))
     print("Also, you can install the dev versions from here:")
-    print("https://github.com/Rapptz/discord.py")
+    print("https://github.com/Rapptz/discord.py/tree/rewrite")
     print("Note: If you get an error saying pip doesn't exist, try this:")
-    print("\"Your python installation path\\Scripts\\pip.exe install discord.py\" (On Windows).")
+    print("\"Your python installation path\\Scripts\\pip.exe install git+https://github.com/Rapptz/discord.py@rewrite\" (On Windows).")
     print("Also make sure you are running command prompt (or whatever you're using)\nas admin.")
     sys.exit()
 except AssertionError: # bot incompatible with 3.4 and below
