@@ -3,8 +3,8 @@
 # Thanks to @Dav999#3322 for helping with the code a lot.
 # Thanks to @Info Teddy#3737 for the help code that I stole from [\].
 # Oops.
-botversion = "2.0" # displayed in the info command
-changes = "It now supports the d.py rewrite."
+botversion = "2.0.0.1" # displayed in the info command
+changes = "oops"
 
 # argument parsing
 import argparse
@@ -364,7 +364,7 @@ starttext = [
     "Please wait, go ahead -- hold your breath",
     "Please wait, at least you're not on hold",
     "Please wait, you're not in Kansas any more",
-    "Please wait, the guild is powered by a lemon and two electrodes",
+    "Please wait, the server is powered by a lemon and two electrodes",
     "Please wait, we love you just the way you are",
     "Please wait, we're testing your patience",
     "Please wait, as if you had any other choice",
